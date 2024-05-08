@@ -4,6 +4,7 @@ import express, { type NextFunction, type Router, type Request, type Response } 
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan'
+import swaggerUi from "swagger-ui-express"
 
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
@@ -34,7 +35,8 @@ export class Server {
         this.app.use(express.urlencoded({ extended: true })); // allow x-www-form-urlencoded
         this.app.use(compression());
         this.app.use(morgan('tiny'))
-        //  limit repeated requests to public APIs
+        this.app.use(express.static("public"));
+        // limit repeated requests to public APIs
         this.app.use(
             rateLimit({
                 max: ONE_HUNDRED,
@@ -43,15 +45,23 @@ export class Server {
             })
         );
 
-        //* Routes
-        this.app.use(this.apiPrefix, this.routes)
-
         // Test rest api
         this.app.get('/', (_req: Request, res: Response) => {
             return res.status(HttpCode.OK).send({
                 message: `Welcome to B-IOS API! Endpoints available at http://localhost:${this.port}${this.apiPrefix}`
             });
         });
+
+        //* Routes
+        this.app.use(this.apiPrefix, this.routes)
+
+        // Swagger API
+        this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, {
+            explorer: true,
+            swaggerOptions: {
+                url: "/swagger.json"
+            }
+        }))
 
         //* Handle not found routes in /api/v1/* (only if 'Public content folder' is not available)
         this.routes.all('*', (req: Request, _: Response, next: NextFunction): void => {
