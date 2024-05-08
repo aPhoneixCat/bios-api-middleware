@@ -2,3 +2,5 @@ node_modules/
 dist/
 coverage/
 .env
+tests/**/*.js
+tests/**/*.js.map

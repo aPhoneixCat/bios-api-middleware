@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
-  "include": ["src/**/*", "tests/unittest/app.test.ts"],
+  "include": ["src/**/*"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
