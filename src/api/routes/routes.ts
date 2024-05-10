@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import TestRoutes from './test.routes'
+import EventsRoutes from './events.routes';
+import QRCodeRoutes from './qrcode.routes';
 
 // global routing
 export class AppRoutes {
     static get routes(): Router {
         const router = Router();
 
-        // Test rest api
-        router.use('/', TestRoutes.routes);
+        // rest api
+        router.use('/events', EventsRoutes.routes);
+        router.use('/qrcode', QRCodeRoutes.routes);
 
         return router;
     }

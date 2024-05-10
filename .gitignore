@@ -4,3 +4,4 @@ coverage/
 .env
 tests/**/*.js
 tests/**/*.js.map
+logs/

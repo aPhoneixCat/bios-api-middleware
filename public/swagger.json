@@ -7,14 +7,169 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"TestResponse": {
+			"QRCodeType": {
+				"enum": [
+					"data_url",
+					"dynamic_link"
+				],
+				"type": "string"
+			},
+			"RegisterResponse": {
 				"properties": {
-					"message": {
+					"qrcode": {
+						"type": "string"
+					},
+					"qrcodeType": {
+						"$ref": "#/components/schemas/QRCodeType"
+					}
+				},
+				"required": [
+					"qrcode",
+					"qrcodeType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RegisterRequest": {
+				"properties": {
+					"visitId": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"message"
+					"visitId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AccessResponse": {
+				"properties": {
+					"qrcode": {
+						"type": "string"
+					},
+					"qrcodeType": {
+						"$ref": "#/components/schemas/QRCodeType"
+					}
+				},
+				"required": [
+					"qrcode",
+					"qrcodeType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AccessRequest": {
+				"properties": {
+					"visitId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"visitId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefresAccessRequest": {
+				"properties": {
+					"visitId": {
+						"type": "string"
+					},
+					"cardholderId": {
+						"type": "string"
+					},
+					"existingCardId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"visitId",
+					"cardholderId",
+					"existingCardId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DynamicQRCodeLinkResponse": {
+				"properties": {
+					"dynamicQRCodeLink": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"dynamicQRCodeLink"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ActivationResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"reason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Actitity": {
+				"enum": [
+					"Checkin",
+					"Checkout"
+				],
+				"type": "string"
+			},
+			"EventType": {
+				"enum": [
+					"Cardholder_CheckinCheckout"
+				],
+				"type": "string"
+			},
+			"CardholderCheckinoutEvent": {
+				"properties": {
+					"timestamp": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"$ref": "#/components/schemas/EventType"
+					},
+					"message": {
+						"type": "string"
+					},
+					"cardholderId": {
+						"type": "string"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/Actitity"
+					}
+				},
+				"required": [
+					"timestamp",
+					"type",
+					"message",
+					"cardholderId",
+					"activity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EventResponse": {
+				"properties": {
+					"events": {
+						"items": {
+							"$ref": "#/components/schemas/CardholderCheckinoutEvent"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"events"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -34,23 +189,246 @@
 		}
 	},
 	"paths": {
-		"/test": {
-			"get": {
-				"operationId": "Test",
+		"/qrcode/register_qrcode": {
+			"post": {
+				"operationId": "RegisterVisit",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/TestResponse"
+									"$ref": "#/components/schemas/RegisterResponse"
 								}
 							}
 						}
 					}
 				},
+				"tags": [
+					"QRCode"
+				],
 				"security": [],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/qrcode/access_qrcode": {
+			"post": {
+				"operationId": "GetAccessQRCode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"QRCode"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AccessRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/qrcode/refresh_access_qrcode": {
+			"post": {
+				"operationId": "RefreshAccessQRCode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"QRCode"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefresAccessRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/qrcode/{visitId}/dynamic_link": {
+			"get": {
+				"operationId": "GetDynamicQRCodeLink",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DynamicQRCodeLinkResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"QRCode"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "visitId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/qrcode/dynamic_link/{visitId}/activate": {
+			"get": {
+				"operationId": "Activate",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ActivationResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"QRCode"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "visitId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/events": {
+			"get": {
+				"operationId": "GetLiveEvents",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EventResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Events"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "eventType",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/EventType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cardholderIds",
+						"required": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				]
+			}
+		},
+		"/events/reporting": {
+			"get": {
+				"operationId": "ReportEvents",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EventResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Events"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "eventType",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cardholderIds",
+						"required": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				]
 			}
 		}
 	},

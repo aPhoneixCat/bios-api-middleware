@@ -8,7 +8,9 @@ import swaggerUi from "swagger-ui-express"
 
 import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
+import morganMiddleware from './middleware/morgan.middlreware';
 import { AppError } from './errors/custom.error'
+import Logger from "./lib/logger";
 
 interface ServerOptions {
     port: number;
@@ -34,7 +36,8 @@ export class Server {
         this.app.use(express.json()); // parse json in request body (allow raw)
         this.app.use(express.urlencoded({ extended: true })); // allow x-www-form-urlencoded
         this.app.use(compression());
-        this.app.use(morgan('tiny'))
+        this.app.use(morgan('tiny'));
+        this.app.use(morganMiddleware);
         this.app.use(express.static("public"));
         // limit repeated requests to public APIs
         this.app.use(
@@ -57,9 +60,10 @@ export class Server {
 
         // Swagger API
         this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, {
-            explorer: true,
+            explorer: false,
             swaggerOptions: {
-                url: "/swagger.json"
+                url: "/swagger.json",
+                validatorUrl: null
             }
         }))
 
@@ -71,8 +75,16 @@ export class Server {
         // Handle errors middleware
         this.routes.use(ErrorMiddleware.handleError);
 
-        this.app.listen(this.port, () => {
-            console.log(`Server running on port ${this.port}...`);
+        const server = this.app.listen(this.port, () => {
+            Logger.info(`Server running on port ${this.port}...`);
         });
+
+        // for a graceful shutdown: https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
+        process.on('SIGTERM', () => {
+            Logger.debug('SIGTERM signal received: closing HTTP server')
+            server.close(() => {
+                Logger.debug('HTTP server closed')
+            })
+        })
     }
 }
