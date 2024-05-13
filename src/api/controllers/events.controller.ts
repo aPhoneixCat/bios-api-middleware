@@ -9,7 +9,7 @@ export class EventController {
   //* Dependency injection
   constructor() { }
 
-  @Get("/")
+  @Get("/live")
   public async getLiveEvents(@Query() eventType: EventType, @Query() cardholderIds: string[]): Promise<EventResponse> {
     if (!cardholderIds || cardholderIds.length == 0) {
       throw new ValidationError([
@@ -49,7 +49,7 @@ export class EventController {
     }
   };
 
-  @Get("/")
+  @Get("/reporting")
   public async reportEvents(@Query() eventType: string, @Query() cardholderIds: string[]): Promise<EventResponse> {
     if (!cardholderIds || cardholderIds.length == 0) {
       throw new ValidationError([

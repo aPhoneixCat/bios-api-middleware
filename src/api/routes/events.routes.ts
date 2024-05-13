@@ -7,14 +7,14 @@ export default class EventsRoutes {
         const router = Router();
         const controller = new EventController()
 
-        router.get('/live', async (req, res) => {
+        router.get('/', async (req, res) => {
             // const eventType: EventType = req.
             // const cardholderIds: string[] = req.params.cardholderIds.
             // const response = await controller.getLiveEvents(eventType, cardholderIds)
             // return res.send(response)
         })
 
-        router.get('/reporting', async (req, res) => {
+        router.get('/', async (req, res) => {
             // const eventType: string = req.par
             // const response = await controller.getLiveEvents()
             // return res.send(response)

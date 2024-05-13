@@ -347,7 +347,7 @@
 				]
 			}
 		},
-		"/events": {
+		"/events/live": {
 			"get": {
 				"operationId": "GetLiveEvents",
 				"responses": {
