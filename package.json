@@ -2,7 +2,7 @@
   "name": "bios-api-middleware",
   "version": "1.0.0",
   "description": "A building's inter-operational system, a.k.a, api middleware/gateway providing interfaces to help external integration with building's intranet systems.",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "predev": "npm run swagger",
     "prebuild": "npm run swagger",
