@@ -1,7 +1,6 @@
 // src/app.ts
-
 import { envs } from './config/env';
-import { AppRoutes } from './api/routes/routes' 
+import { AppRoutes } from './api/routes/routes'
 import { Server } from './server';
 
 (() => {
