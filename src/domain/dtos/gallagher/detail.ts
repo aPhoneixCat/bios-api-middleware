@@ -1,6 +1,7 @@
 import { IdentityMixin, HrefMixin } from '../utils';
-import { AlarmZoneSummary, AccessSummary, CardExpiryTypeSummary } from './summary';
+import { AlarmZoneSummary, AccessSummary, CardExpiryTypeSummary, CardSummary, AccessGroupSummary } from './summary';
 import { AccessGroupRef, AccessZoneRef, AlarmRef, CardholderRef, DivisionRef, DoorRef, ItemRef, PDFRef } from './reference';
+import { Status } from '../../entities/gallagher-cardholder';
 
 export interface DivisionDetail extends IdentityMixin, HrefMixin {
     name: string,
@@ -57,16 +58,43 @@ export interface CardTypeDetail extends IdentityMixin, HrefMixin {
     send_registration_sms: boolean | null;
 }
 
-export interface CardholderDetail extends IdentityMixin {
-  firstName: string;
-  lastName: string;
-  shortName: string | null;
-  description: string | null;
-  authorised: boolean;
+/**
+ * Card detail for creating cardholder
+ */
+export interface CardDetail {
+    type?: HrefMixin,
+    from?: Date,
+    until?: Date,
+    status?: Status,
+    number?: string
+}
 
-  disableCipherPad: boolean;
-  division: DivisionRef;
-  edit: HrefMixin;
+/**
+ * Card detail for returning card information
+ */
+export type CardDetailWithRef = CardDetail & HrefMixin
+
+/**
+ * Ref to https://gallaghersecurity.github.io/cc-rest-docs/ref/cardholders.html#/definitions/Cardholder%20detail
+ */
+export interface CardholderDetail extends IdentityMixin {
+  firstName?: string;
+  lastName?: string;
+  shortName?: string;
+  description?: string;
+  authorised?: boolean;
+  lastSuccessfulAccessTime?: Date;
+  lastSuccessfulAccessZone?: AccessZoneRef;
+  severDisplayName?: string;
+
+  division?: DivisionRef;
+  disableCipherPad?: boolean;
+  usercode?: string;
+  edit?: HrefMixin;
+  //TODO
+  personalDataDefinitions?: any
+  cards?: CardDetailWithRef | CardDetailWithRef
+  accessGroups?: AccessGroupSummary
 
   operatorLoginEnabled: boolean;
   operatorPasswordExpired: boolean;

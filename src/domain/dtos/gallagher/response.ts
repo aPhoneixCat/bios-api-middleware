@@ -26,7 +26,8 @@ export interface CardTypeResponse {
  * it is dynamically configured from the discovery
  */
 export interface CardholderSummaryResponse {
-    results: CardholderSummary[]
+    results: CardholderSummary[],
+    next?: HrefMixin
 }
 
 /**
