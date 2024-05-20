@@ -31,6 +31,13 @@ export interface CardholderRef extends HrefMixin {
 }
 
 /**
+ * Reference to a card type
+ */
+export interface CardTypeRef extends HrefMixin {
+    name: string
+}
+
+/**
  * Cardholder ref used with events:
  * 
  *  Events seem to send partial information where href is missing at times
@@ -55,7 +62,7 @@ export interface DayCategoryRef extends HrefMixin {
  * 
  * The Mixins cover all the fields that are returned in the summary, hence nothing has to be declared in the body
  */
-export interface DivisionRef extends IdentityMixin, OptionalHref {}
+export interface DivisionRef extends IdentityMixin, OptionalHref { }
 
 export interface DoorRef extends HrefMixin {
     name: string
@@ -99,6 +106,39 @@ export interface ScheduleRef extends HrefMixin {
 /**
  * AccessZone represents
  */
-export interface AccessZoneRef extends IdentityMixin, HrefMixin {
+export interface AccessZoneRef extends HrefMixin {
     name: string
 }
+
+export interface OperatorGroupRef extends HrefMixin {
+    name: string
+}
+
+export interface CompetencyRef extends HrefMixin {
+    name: string
+}
+
+export interface RoleRef extends HrefMixin {
+    name: string
+}
+
+export interface ElevatorGroupRef extends HrefMixin {
+    name: string
+}
+
+export interface OperatorRef extends HrefMixin {
+    name: string
+}
+
+export interface AlarmRef extends HrefMixin {
+    state: string
+}
+
+// Pagination Ref
+export interface Next extends HrefMixin { }
+
+// Pagination Ref
+export interface Previous extends HrefMixin { }
+
+// Pagination Ref
+export interface Updates extends HrefMixin { }
