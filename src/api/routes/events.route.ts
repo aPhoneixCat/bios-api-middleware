@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { EventController } from '../controllers/events.controller';
 import { EventType } from '../../domain/entities/event';
 
+// TODO - 1B
 export default class EventsRoutes {
     static get routes(): Router {
         const router = Router();

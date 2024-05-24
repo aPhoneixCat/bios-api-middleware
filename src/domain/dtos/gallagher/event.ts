@@ -122,7 +122,23 @@ export interface AfterLocation {
 }
 
 // ======================= Request ===========================
-// TBD
+
+// https://gallaghersecurity.github.io/cc-rest-docs/ref/events.html
+export interface EventSearchParams {
+  top?: number, // Sets the maximum number of events to return per page. Default = 1000
+  after?: string, // // Extended ISO-8601 time stamp formats
+  before?: string, // Extended ISO-8601 time stamp formats
+  source?: string, // Restricts events to those whose source item has this ID. Separate multiple IDs with commas
+  type?: string,  // Restricts events to those whose type has this ID. Separate multiple IDs with commas.
+  group?: string, // Restricts events to those with this event group ID. Separate multiple IDs with commas.
+  cardholder?: string // Restricts events to those associated with the cardholder that has this Command Centre ID. Separate multiple IDs with commas.
+  division?: string, // Restricts events to those in these divisions or their descendants. Separate IDs with commas.
+  directDivision?: string, // Restricts events to those whose division is in this list. Unlike division=, it does not follow ancestry. Separate IDs with commas.
+  relatedItem?: string, // Restrict events to those associated with the item that has this Command Centre ID. Separate multiple IDs with commas.
+  fields?: string, // Sets the fields you want in your results.
+  previous?: boolean // Returns the newest events rather than the oldest. Default = false
+  pos?: number // Restricts events to those with event IDs greater than this parameter (or less than and including, if you set previous=true).
+} 
 
 // ======================= Response ==========================
 // Event related response

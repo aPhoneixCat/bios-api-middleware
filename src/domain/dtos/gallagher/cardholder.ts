@@ -206,6 +206,9 @@ export interface AccessGroupOperation {
 
 
 // ======================= Response =========================
+export type CreateCardholderResponse = HrefMixin & {
+  cardholderId: string,
+}
 
 /**
  * Response cardholder list and search

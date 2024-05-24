@@ -1,9 +1,8 @@
 import axios from "axios";
+import axiosRetry from "axios-retry"
 import { envs } from "../../config/env";
-import { CardholderDetail } from "../../domain/dtos/gallagher/detail";
+import { AxiosInstance } from "axios";
 import Logger from "../logger";
-import { HttpCode } from "../../constants";
-import { AppError } from "../../errors/custom.error";
 
 /**
  * Validate Grallagher API kjey
@@ -39,7 +38,10 @@ export interface EndpointConfig {
     dto_get?: any, // DTO to be used for retrieve requests
     top?: number, // Number of response to return
     sort?: string, // Can be set to id or -id
-    fields?: string[] // Optional list of fields to return
+    fields?: string[], // Optional list of fields to return
+
+    countofRetry?: number,
+    intervalOfRetryInMs?: number
 }
 
 /**
@@ -51,20 +53,35 @@ export abstract class IAPIEndpoint {
      * The configuration of this endpoint object
      */
     endpointConfig: EndpointConfig
+    axiosClient: AxiosInstance
 
     constructor(config: EndpointConfig) {
         this.endpointConfig = config
+        this.axiosClient = axios.create({
+            baseURL: envs.GALLAGHER_API_URL
+        })
+        this.initalRetry(this.axiosClient)
+    }
+
+    initalRetry(axiosClient: AxiosInstance) {
+        const retryCnt = this.endpointConfig.countofRetry || 3
+        const retryInterval = this.endpointConfig.intervalOfRetryInMs || 1000
+        axiosRetry(axiosClient, {
+            retries: this.endpointConfig.countofRetry, // number of retries
+            retryDelay: (retryCount) => {
+                Logger.warning(`retry attempt: ${retryCount}`);
+                return retryCnt * retryInterval; // time interval between retries
+            },
+            retryCondition: (error) => {
+                const errorRes = error.response
+                if (errorRes) {
+                    return [500, 503].includes(errorRes.status);
+                }
+
+                return false
+            },
+        });
     }
 
     abstract getConfig(): EndpointConfig
-
-    abstract get(id: string): any
-
-    // list(skip: number): any
-
-    // update(): void
-    // create(): void
-    // delete(): void
-
-
 }

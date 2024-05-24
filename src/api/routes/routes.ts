@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import EventsRoutes from './events.routes';
-import QRCodeRoutes from './qrcode.routes';
+import EventsRoutes from './events.route';
+import ACSRoutes from './acs.route';
 
 // global routing
 export class AppRoutes {
@@ -9,7 +9,7 @@ export class AppRoutes {
 
         // rest api
         router.use('/events', EventsRoutes.routes);
-        router.use('/qrcode', QRCodeRoutes.routes);
+        router.use('/acs', ACSRoutes.routes);
 
         return router;
     }
