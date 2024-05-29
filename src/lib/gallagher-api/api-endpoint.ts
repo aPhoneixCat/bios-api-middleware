@@ -52,18 +52,18 @@ export abstract class IAPIEndpoint {
     /**
      * The configuration of this endpoint object
      */
-    endpointConfig: EndpointConfig
-    axiosClient: AxiosInstance
+    protected endpointConfig: EndpointConfig
+    protected axiosClient: AxiosInstance
 
-    constructor(config: EndpointConfig) {
-        this.endpointConfig = config
+    constructor() {
+        this.endpointConfig = this.getConfig()
         this.axiosClient = axios.create({
             baseURL: envs.GALLAGHER_API_URL
         })
         this.initalRetry(this.axiosClient)
     }
 
-    initalRetry(axiosClient: AxiosInstance) {
+    private initalRetry(axiosClient: AxiosInstance) {
         const retryCnt = this.endpointConfig.countofRetry || 3
         const retryInterval = this.endpointConfig.intervalOfRetryInMs || 1000
         axiosRetry(axiosClient, {
@@ -83,5 +83,5 @@ export abstract class IAPIEndpoint {
         });
     }
 
-    abstract getConfig(): EndpointConfig
+    protected abstract getConfig(): EndpointConfig
 }

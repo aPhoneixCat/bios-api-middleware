@@ -2,13 +2,12 @@
 
 import { UserType } from "../entities/cardholder"
 
-// Cardholder APIs
-// router.post('/cardholders', ctl.createCardholder)
 export interface CreateCardholderRequest {
     userName: string,
     userType: UserType,
     cardNumber: string,
-    validityPeriodInMs: number
+    fromInMs?: number
+    validityPeriodInMs?: number
 }
 
 export interface CreateCardholderResponse {

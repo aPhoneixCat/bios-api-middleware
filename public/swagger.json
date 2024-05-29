@@ -63,6 +63,59 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CreateCardholderResponse": {
+				"properties": {
+					"cardholderId": {
+						"type": "string"
+					},
+					"expiredAt": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"cardholderId",
+					"expiredAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserType": {
+				"enum": [
+					"visitor",
+					"staff",
+					"vip"
+				],
+				"type": "string"
+			},
+			"CreateCardholderRequest": {
+				"properties": {
+					"userName": {
+						"type": "string"
+					},
+					"userType": {
+						"$ref": "#/components/schemas/UserType"
+					},
+					"cardNumber": {
+						"type": "string"
+					},
+					"fromInMs": {
+						"type": "number",
+						"format": "double"
+					},
+					"validityPeriodInMs": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userName",
+					"userType",
+					"cardNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -161,6 +214,122 @@
 						}
 					}
 				]
+			}
+		},
+		"/acs/cardholders": {
+			"post": {
+				"operationId": "CreateCardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateCardholderResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCardholderRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/acs/cardholers/{cardholderId}": {
+			"patch": {
+				"operationId": "UpdateCardholder",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/acs/cardholders/{carholderId}": {
+			"delete": {
+				"operationId": "RemoveCardholder",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/acs/cardholders/{carholderId}/cards": {
+			"post": {
+				"operationId": "AddCard2Cardholder",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/acs/cardholders/{carholderId}/cards/{cardId}": {
+			"post": {
+				"operationId": "RemoveCardFromCardholder",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/acs/cardholders/{carholderId}/activate": {
+			"get": {
+				"operationId": "ActivateCardholder",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},

@@ -6,7 +6,7 @@ import { HrefMixin, IdentityMixin, OptionalHref } from '../utils'
  *  Access Groups is what a user is assigned to to provide access to doors
  */
 export interface AccessGroupRef extends HrefMixin {
-    name: string
+    name?: string
 }
 
 /**

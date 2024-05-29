@@ -1,10 +1,14 @@
 import { Router } from 'express';
-import { ACSController } from '../controllers/acs.controller.';
+import { ACSController } from '../controllers/acs.controller';
+import { Cardhodlers } from '../../lib/gallagher-api/cardholders.api';
+import ACSService from '../../services/acs.services';
 
 export default class ACSRoutes {
     static get routes(): Router {
         const router = Router();
-        const ctl = new ACSController()
+        const apiEndPoint = new Cardhodlers()
+        const service = new ACSService(apiEndPoint)
+        const ctl = new ACSController(service)
 
         // Cardholder APIs
         router.post('/cardholders', ctl.createCardholder)

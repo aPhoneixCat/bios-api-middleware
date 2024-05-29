@@ -23,7 +23,7 @@ export interface CardholderSearchResponse {
 /**
  * https://gallaghersecurity.github.io/cc-rest-docs/ref/cardholders.html#definition-Cardholder-card
  */
-export interface CardholderDetail extends IdentityMixin, HrefMixin {
+export interface CardholderDetail {
   firstName?: string;
   lastName?: string;
   shortName?: string;
@@ -35,18 +35,18 @@ export interface CardholderDetail extends IdentityMixin, HrefMixin {
   division?: HrefMixin;
   '@email'?: string;
   '@phone'?: string;
-  personalDataDefinitions: PersonalDataDefinition[];
-  cards: Card[];
-  accessGroups: AccessGroup[];
-  operatorGroups: OperatorGroup[];
-  competencies: Competency[];
-  updateLocation: HrefMixin;
-  notes: string;
-  notifications: Notifications;
-  relationships: Relationship[];
-  lockers: Locker[];
-  elevatorGroups: ElevatorGroup[];
-  redactions: Redaction[];
+  personalDataDefinitions?: PersonalDataDefinition[];
+  cards?: Card[];
+  accessGroups?: AccessGroup[];
+  operatorGroups?: OperatorGroup[];
+  competencies?: Competency[];
+  updateLocation?: HrefMixin;
+  notes?: string;
+  notifications?: Notifications;
+  relationships?: Relationship[];
+  lockers?: Locker[];
+  elevatorGroups?: ElevatorGroup[];
+  redactions?: Redaction[];
 }
 
 export interface Redaction {
@@ -131,12 +131,12 @@ export interface AccessGroup extends OptionalHref {
   until?: string;
 }
 
-export interface Card extends HrefMixin {
+export interface Card extends OptionalHref {
   number?: string;
   cardSerialNumber?: string;
   issueLevel?: number;
   status?: Status;
-  type?: CardTypeRef;
+  type?: CardTypeRef | HrefMixin;
   invitation?: Invitation;
   from?: string;
   until?: string;
@@ -183,8 +183,8 @@ export interface PdfDefinition {
 }
 
 // ======================= Request ==========================
-export type CreateCardholderRequest = CardholderDetail
-export interface UpdateCardholderRequest {
+export type GallagherCreateCardholderRequest = CardholderDetail
+export interface GallagherUpdateCardholderRequest {
   authorised?: boolean,
   "@email"?: string,
   "@phone"?: string,
@@ -206,7 +206,7 @@ export interface AccessGroupOperation {
 
 
 // ======================= Response =========================
-export type CreateCardholderResponse = HrefMixin & {
+export type GallagherCreateCardholderResponse = HrefMixin & {
   cardholderId: string,
 }
 
@@ -214,10 +214,10 @@ export type CreateCardholderResponse = HrefMixin & {
  * Response cardholder list and search
  *
  */
-export interface CardholderSearchResponse {
+export interface GallagherCardholderSearchResponse {
   results: CardholderSummary[],
 
   next?: HrefMixin
 }
 
-export type GetCardholderDetailResponse = CardholderDetail
+export type GallagherGetCardholderDetailResponse = CardholderDetail & IdentityMixin & HrefMixin

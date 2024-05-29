@@ -1,5 +1,5 @@
 // src/server.ts
-
+import { type Server as ServerHttp, type IncomingMessage, type ServerResponse } from 'http';
 import express, { type NextFunction, type Router, type Request, type Response } from 'express';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
@@ -11,6 +11,7 @@ import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
 import { AppError } from './errors/custom.error'
 import Logger from "./lib/logger";
+import { CorsMiddleware } from './middleware/cors.middleware';
 
 interface ServerOptions {
     port: number;
@@ -20,6 +21,7 @@ interface ServerOptions {
 
 export class Server {
     private readonly app = express();
+    private serverListener?: ServerHttp<typeof IncomingMessage, typeof ServerResponse>;
     private readonly port: number;
     private readonly routes: Router;
     private readonly apiPrefix: string;
@@ -47,8 +49,10 @@ export class Server {
                 message: 'Too many requests from this IP, please try again in one hour'
             })
         );
+        // CORS
+        this.app.use(CorsMiddleware.handleCors)
 
-        // Test rest api
+        // Hello B-IOS
         this.app.get('/', (_req: Request, res: Response) => {
             return res.status(HttpCode.OK).send({
                 message: `Welcome to B-IOS API! Endpoints available at http://localhost:${this.port}${this.apiPrefix}`
@@ -72,19 +76,23 @@ export class Server {
             next(AppError.notFound(`Cant find ${req.originalUrl} on this server!`));
         });
 
-        // Handle errors middleware
+        // Handle errors middleware for the routes
         this.routes.use(ErrorMiddleware.handleError);
 
-        const server = this.app.listen(this.port, () => {
+        this.serverListener = this.app.listen(this.port, () => {
             Logger.info(`Server running on port ${this.port}...`);
         });
 
         // for a graceful shutdown: https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
         process.on('SIGTERM', () => {
             Logger.debug('SIGTERM signal received: closing HTTP server')
-            server.close(() => {
-                Logger.debug('HTTP server closed')
-            })
+            this.close()
         })
+    }
+
+    close(): void {
+        this.serverListener?.close(() => {
+            Logger.debug('HTTP server closed')
+        });
     }
 }
