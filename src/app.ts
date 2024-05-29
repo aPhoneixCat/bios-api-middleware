@@ -1,6 +1,5 @@
 // src/app.ts
 import { envs } from './config/env';
-import { AppRoutes } from './api/routes/routes'
 import { Server } from './server';
 
 (() => {
@@ -10,8 +9,7 @@ import { Server } from './server';
 function main(): void {
     const server = new Server({
         port: envs.PORT,
-        apiPrefix: envs.API_PREFIX,
-        routes: AppRoutes.routes
+        apiPrefix: envs.API_PREFIX
     });
     void server.start();
 }

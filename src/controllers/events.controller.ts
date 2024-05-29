@@ -1,7 +1,7 @@
 import { Body, Get, Query, Route, Tags } from "tsoa";
-import { EventRequest, EventResponse } from "../../domain/dtos/event";
-import { Actitity, EventType, CardholderCheckinoutEvent } from "../../domain/entities/event";
-import { ValidationError } from "../../errors/validation.error";
+import { EventRequest, EventResponse } from "../domain/dtos/event";
+import { Actitity, EventType, CardholderCheckinoutEvent } from "../domain/entities/event";
+import { ValidationError } from "../errors/validation.error";
 
 // TODO - 1B
 @Route("events")

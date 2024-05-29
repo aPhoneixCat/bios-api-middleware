@@ -12,25 +12,29 @@ import morganMiddleware from './middleware/morgan.middlreware';
 import { AppError } from './errors/custom.error'
 import Logger from "./lib/logger";
 import { CorsMiddleware } from './middleware/cors.middleware';
+import { RegisterRoutes } from "./routes";
+
+import { ACSController } from './controllers/acs.controller';
+import { EventController } from './controllers/events.controller';
+import { WIFIController } from './controllers/wifi.controller';
 
 interface ServerOptions {
     port: number;
     apiPrefix: string;
-    routes: Router;
+    //routes: Router;
 }
 
 export class Server {
     private readonly app = express();
     private serverListener?: ServerHttp<typeof IncomingMessage, typeof ServerResponse>;
     private readonly port: number;
-    private readonly routes: Router;
-    private readonly apiPrefix: string;
+    // private readonly routes: Router;
+    //private readonly apiPrefix: string;
 
     constructor(options: ServerOptions) {
-        const { port, routes, apiPrefix } = options;
+        const { port } = options;
         this.port = port;
-        this.routes = routes;
-        this.apiPrefix = apiPrefix;
+        //this.apiPrefix = apiPrefix;
     }
 
     async start(): Promise<void> {
@@ -52,16 +56,6 @@ export class Server {
         // CORS
         this.app.use(CorsMiddleware.handleCors)
 
-        // Hello B-IOS
-        this.app.get('/', (_req: Request, res: Response) => {
-            return res.status(HttpCode.OK).send({
-                message: `Welcome to B-IOS API! Endpoints available at http://localhost:${this.port}${this.apiPrefix}`
-            });
-        });
-
-        //* Routes
-        this.app.use(this.apiPrefix, this.routes)
-
         // Swagger API
         this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, {
             explorer: false,
@@ -71,16 +65,20 @@ export class Server {
             }
         }))
 
-        //* Handle not found routes in /api/v1/* (only if 'Public content folder' is not available)
-        this.routes.all('*', (req: Request, _: Response, next: NextFunction): void => {
+        //* Routes
+        RegisterRoutes(this.app);
+
+        // Handle errors middleware for the routes
+        this.app._router.use(ErrorMiddleware.handleError);
+
+        //* Handle not found routes
+        this.app._router.all('*', (req: Request, _: Response, next: NextFunction): void => {
             next(AppError.notFound(`Cant find ${req.originalUrl} on this server!`));
         });
 
-        // Handle errors middleware for the routes
-        this.routes.use(ErrorMiddleware.handleError);
-
         this.serverListener = this.app.listen(this.port, () => {
-            Logger.info(`Server running on port ${this.port}...`);
+            Logger.info(`✓ Server running on port http://localhost:${this.port}`);
+            Logger.info(`✓ Started Swagger UI at http://localhost:${this.port}/docs`)
         });
 
         // for a graceful shutdown: https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html

@@ -6,18 +6,20 @@
   "scripts": {
     "predev": "npm run swagger",
     "prebuild": "npm run swagger",
-    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
-    "build": "rimraf ./dist && tsc",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "build": "rimraf ./dist && tsoa spec-and-routes && tsc",
     "start": "npm run build && node dist/app.js",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
-    "swagger": "tsoa spec"
+    "swagger": "tsoa spec",
+    "routes": "tsoa routes"
   },
   "nodemonConfig": {
     "watch": [
       "src"
     ],
+    "ignore": ["./src/routes.ts" ],
     "ext": "ts",
     "exec": "ts-node src/app.ts"
   },

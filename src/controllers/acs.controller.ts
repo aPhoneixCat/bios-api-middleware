@@ -1,17 +1,14 @@
 import { Get, Post, Body, Path, Route, Tags, Delete, Controller, Patch } from "tsoa";
-import { CreateCardholderRequest, CreateCardholderResponse } from "../../domain/dtos/acs";
-import ACSService from "../../services/acs.services";
-import { CardholderEntity } from "../../domain/entities/cardholder";
-import Logger from "../../lib/logger";
+import { CreateCardholderRequest, CreateCardholderResponse } from "../domain/dtos/acs";
+import ACSService from "../services/acs.services";
+import { CardholderEntity } from "../domain/entities/cardholder";
+import Logger from "../lib/logger";
 
 @Route("acs")
 @Tags("ACS")
 export class ACSController extends Controller {
 
-  constructor(private readonly acsService: ACSService) {
-    super();
-    this.createCardholder.bind(this)
-  }
+  // private readonly acsService: ACSService
 
   @Post("/cardholders")
   public async createCardholder(@Body() requestBody: CreateCardholderRequest): Promise<CreateCardholderResponse> { 
@@ -20,7 +17,7 @@ export class ACSController extends Controller {
       requestBody.userType, requestBody.userName, requestBody.cardNumber, requestBody.validityPeriodInMs
     )
 
-    return this.acsService.createCardholder(userInfo)
+    return new ACSService().createCardholder(userInfo)
   }
 
   @Patch("/cardholers/{cardholderId}")
