@@ -5,3 +5,4 @@ coverage/
 tests/**/*.js
 tests/**/*.js.map
 logs/
+public/swagger.json
