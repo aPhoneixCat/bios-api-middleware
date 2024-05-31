@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import axiosRetry from "axios-retry"
 import { envs } from "../../config/env";
 import { AxiosInstance } from "axios";
 import Logger from "../logger";
+import { AppError } from "../../errors/custom.error";
 
 /**
  * Validate Grallagher API kjey
@@ -11,8 +12,8 @@ import Logger from "../logger";
  * @param api_key Gallagher API 
  * @returns 
  */
-const checKAPIKey = (api_key: string) => {
-    const tokens = api_key.split('-')
+const checKAPIKey = (apiKey: string) => {
+    const tokens = apiKey.split('-')
     return tokens.length == 8
 }
 
@@ -26,7 +27,7 @@ export const getAPIKey = () => {
         return `GGL-API-KEY ${apiKey}`
     }
 
-    throw new Error('The gallagher api key is invalid')
+    throw AppError.unauthorized('The gallagher api key is invalid')
 }
 
 /**
@@ -34,14 +35,11 @@ export const getAPIKey = () => {
  */
 export interface EndpointConfig {
     endpoint: string,
-    dto_list?: any, // DTO to be used for list requests
-    dto_get?: any, // DTO to be used for retrieve requests
-    top?: number, // Number of response to return
-    sort?: string, // Can be set to id or -id
-    fields?: string[], // Optional list of fields to return
-
+    timeoutInMs?: number,
     countofRetry?: number,
-    intervalOfRetryInMs?: number
+    intervalOfRetryInMs?: number,
+
+    fields?: string[], // Optional list of fields to return
 }
 
 /**
@@ -58,7 +56,8 @@ export abstract class IAPIEndpoint {
     constructor() {
         this.endpointConfig = this.getConfig()
         this.axiosClient = axios.create({
-            baseURL: envs.GALLAGHER_API_URL
+            baseURL: envs.GALLAGHER_API_URL,
+            timeout: this.endpointConfig.timeoutInMs || 2000
         })
         this.initalRetry(this.axiosClient)
     }
@@ -68,11 +67,11 @@ export abstract class IAPIEndpoint {
         const retryInterval = this.endpointConfig.intervalOfRetryInMs || 1000
         axiosRetry(axiosClient, {
             retries: this.endpointConfig.countofRetry, // number of retries
-            retryDelay: (retryCount) => {
+            retryDelay: (retryCount: number) => {
                 Logger.warning(`retry attempt: ${retryCount}`);
                 return retryCnt * retryInterval; // time interval between retries
             },
-            retryCondition: (error) => {
+            retryCondition: (error: AxiosError) => {
                 const errorRes = error.response
                 if (errorRes) {
                     return [500, 503].includes(errorRes.status);

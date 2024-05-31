@@ -4,8 +4,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "rootDir": "./src",
     "moduleResolution": "NodeNext",
+    "rootDir": "./src",
+    "types": ["reflect-metadata"],
     "typeRoots": ["./node_modules/@types"],
     "sourceMap": true,
     "outDir": "dist/",

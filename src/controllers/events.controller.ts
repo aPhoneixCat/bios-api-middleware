@@ -1,9 +1,10 @@
-import { Body, Get, Query, Route, Tags } from "tsoa";
+import { Body, Get, Hidden, Query, Route, Tags } from "tsoa";
 import { EventRequest, EventResponse } from "../domain/dtos/event";
 import { Actitity, EventType, CardholderCheckinoutEvent } from "../domain/entities/event";
 import { ValidationError } from "../errors/validation.error";
 
 // TODO - 1B
+@Hidden() 
 @Route("events")
 @Tags("Events")
 export class EventController {
