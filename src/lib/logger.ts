@@ -1,4 +1,8 @@
 import winston from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file';
+import 'winston-mongodb'
+import { MongoDBConnectionOptions } from 'winston-mongodb';
+import { envs } from "../config/env";
 
 const levels = {
     error: 0,
@@ -8,9 +12,9 @@ const levels = {
     debug: 4,
 }
 
+
 const level = () => {
-    const env = process.env.NODE_ENV || 'development'
-    const isDevelopment = env === 'development'
+    const isDevelopment = envs.NODE_ENV === 'development'
     return isDevelopment ? 'debug' : 'warn'
 }
 
@@ -20,6 +24,18 @@ const colors = {
     info: 'green',
     http: 'magenta',
     debug: 'white',
+}
+
+const mongoLogOptions: MongoDBConnectionOptions = {
+    db: envs.MONGODB_CONNECTION_STR,
+    dbName: 'loggerDatabase',
+    options: { useUnifiedTopology: true},
+    collection: 'logs',
+    capped: false,
+    expireAfterSeconds: 2592000,
+    leaveConnectionOpen: false,
+    storeHost: false,
+    metaKey: 'additionInfo'
 }
 
 winston.addColors(colors)
@@ -32,13 +48,28 @@ const format = winston.format.combine(
     ),
 )
 
+const allFileTransport: DailyRotateFile = new DailyRotateFile({
+    filename: 'logs/application-%DATE%.log',
+    datePattern: 'YYYY-MM-DD-HH',
+    zippedArchive: true,
+    maxSize: '20m',
+    maxFiles: '14d'
+});
+
+const errorFilleTransport: DailyRotateFile = new DailyRotateFile({
+    level: 'error',
+    filename: 'logs/application-error-%DATE%.log',
+    datePattern: 'YYYY-MM-DD-HH',
+    zippedArchive: true,
+    maxSize: '20m',
+    maxFiles: '14d'
+});
+
 const transports = [
     new winston.transports.Console(),
-    new winston.transports.File({
-        filename: 'logs/error.log',
-        level: 'error',
-    }),
-    new winston.transports.File({ filename: 'logs/all.log' }),
+    errorFilleTransport,
+    allFileTransport,
+    new winston.transports.MongoDB(mongoLogOptions)
 ]
 
 const Logger = winston.createLogger({

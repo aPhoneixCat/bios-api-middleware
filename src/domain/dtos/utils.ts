@@ -14,3 +14,15 @@ export interface HrefMixin {
 export interface OptionalHref {
     href?: string;
 }
+
+export interface SuccessResponse<T> {
+    success: boolean,
+    message: string,
+    data: T
+}
+
+export interface ErrorResponse {
+    success: boolean,
+    message: string,
+    error: Error
+}

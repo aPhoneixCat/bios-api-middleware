@@ -1,12 +1,11 @@
 // src/server.ts
 import { type Server as ServerHttp, type IncomingMessage, type ServerResponse } from 'http';
-import express, { type NextFunction, type Router, type Request, type Response } from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
-import morgan from 'morgan'
 import swaggerUi from "swagger-ui-express"
 
-import { HttpCode, ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
+import { ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
 import { AppError } from './errors/custom.error'
@@ -16,7 +15,7 @@ import { RegisterRoutes } from "./routes";
 
 // ########################################################################
 // controllers need to be referenced in order to get crawled by the generator
-// when adding new controller, add the import here so that it can be crawled.
+// when adding new controller, add the import here so that it can be indexed.
 import { ACSController } from './controllers/acs.controller';
 import { EventController } from './controllers/events.controller';
 import { WIFIController } from './controllers/wifi.controller';
@@ -42,7 +41,6 @@ export class Server {
         this.app.use(express.json()); // parse json in request body (allow raw)
         this.app.use(express.urlencoded({ extended: true })); // allow x-www-form-urlencoded
         this.app.use(compression());
-        this.app.use(morgan('tiny'));
         this.app.use(morganMiddleware);
         this.app.use(express.static("public"));
         this.app.use(CorsMiddleware.handleCors)
@@ -61,15 +59,16 @@ export class Server {
                 validatorUrl: null
             }
         }))
+        this.app.use('/', (_, res) => res.redirect('/api-docs'))
 
         RegisterRoutes(this.app);
-       
+
         //* Handle not found routes
         this.app.all('*', (req: Request, _: Response, next: NextFunction): void => {
             next(AppError.notFound(`Cant find ${req.originalUrl} on this server!`));
         });
-         // Handle errors middleware for the routes
-         this.app.use(ErrorMiddleware.handleError);
+        // Handle errors middleware for the routes
+        this.app.use(ErrorMiddleware.handleError);
 
         this.serverListener = this.app.listen(this.port, () => {
             Logger.info(`✓ Server running on port http://localhost:${this.port}`);

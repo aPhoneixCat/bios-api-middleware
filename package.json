@@ -78,6 +78,8 @@
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.2.1",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "winston-mongodb": "^5.1.1"
   }
 }

@@ -867,7 +867,7 @@
 				"operationId": "GetCardholder",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Cardholder details",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -877,12 +877,14 @@
 						}
 					}
 				},
+				"description": "Retrives the details of an existing cardholder.",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "Supply the unique cardholdr ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -899,12 +901,14 @@
 						"description": "No content"
 					}
 				},
+				"description": "Delete existing cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "Path variable of unique cardholder ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -930,17 +934,20 @@
 						}
 					}
 				},
+				"description": "Create new cardholder, and optionally add new card",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "request body to add cardholder",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateCardholderRequest"
+								"$ref": "#/components/schemas/CreateCardholderRequest",
+								"description": "request body to add cardholder"
 							}
 						}
 					}
@@ -955,12 +962,14 @@
 						"description": "No content"
 					}
 				},
+				"description": "Update cardholder information",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "path variable with unique cardholder ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -970,11 +979,13 @@
 					}
 				],
 				"requestBody": {
+					"description": "request body to update cardholder",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateCardholderRequest"
+								"$ref": "#/components/schemas/UpdateCardholderRequest",
+								"description": "request body to update cardholder"
 							}
 						}
 					}
@@ -996,12 +1007,14 @@
 						}
 					}
 				},
+				"description": "Activate/Deactivate existing cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "Path variable of unique existing cardholder",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -1010,6 +1023,7 @@
 						}
 					},
 					{
+						"description": "Query parameter of boolean flag to activate (True)/de-activate(False)",
 						"in": "query",
 						"name": "authorised",
 						"required": true,
@@ -1035,12 +1049,14 @@
 						}
 					}
 				},
+				"description": "Add new card to existing cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "Path variables of unique cardholder ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -1050,11 +1066,13 @@
 					}
 				],
 				"requestBody": {
+					"description": "request body to add new card",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AddCardToCardholderRequest"
+								"$ref": "#/components/schemas/AddCardToCardholderRequest",
+								"description": "request body to add new card"
 							}
 						}
 					}
@@ -1076,12 +1094,14 @@
 						}
 					}
 				},
+				"description": "Remove existing card from existing cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "Path variable of unique existing cardholder ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -1090,6 +1110,7 @@
 						}
 					},
 					{
+						"description": "Path variable of existing card ID",
 						"in": "path",
 						"name": "cardId",
 						"required": true,

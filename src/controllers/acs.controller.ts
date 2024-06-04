@@ -17,11 +17,23 @@ export class ACSController extends Controller {
     super();
   }
 
+  /**
+   * Retrives the details of an existing cardholder.
+   * 
+   * @param cardholderId Supply the unique cardholdr ID 
+   * @returns Cardholder details
+   */
   @Get("/cardholders/{cardholderId}")
   public async getCardholder(@Path() cardholderId: string): Promise<GetCardholderResponse> {
     return await this.acsService.getCardholder(cardholderId)
   }
   
+  /**
+   * Create new cardholder, and optionally add new card
+   * 
+   * @param reqB request body to add cardholder
+   * @returns 
+   */
   @Post("/cardholders")
   public async createCardholder(@Body() reqB: CreateCardholderRequest): Promise<CreateCardholderResponse> {
     var cardEntity;
@@ -31,10 +43,17 @@ export class ACSController extends Controller {
 
     const cardholder  = new CardholderEntity(reqB.userType, reqB.userName, reqB.authorised, cardEntity || undefined)
 
+    this.setStatus(HttpCode.CREATED)
+
     return await this.acsService.createCardholder(cardholder)
   }
 
-  // TODO
+  /**
+   * Update cardholder information
+   * 
+   * @param cardholderId path variable with unique cardholder ID
+   * @param reqB request body to update cardholder
+   */
   @Patch("/cardholers/{cardholderId}")
   public async updateCardholder(@Path() cardholderId: string, @Body() reqB: UpdateCardholderRequest): Promise<void> { 
     await this.acsService.updateCardholder(cardholderId, new CardholderEntity())
@@ -42,18 +61,37 @@ export class ACSController extends Controller {
     this.setStatus(HttpCode.NO_CONTENT)
   }
 
+  /**
+   * Delete existing cardholder
+   * 
+   * @param cardholderId Path variable of unique cardholder ID
+   */
   @Delete("/cardholders/{cardholderId}")
   public async removeCardholder(@Path() cardholderId: string): Promise<void> { 
     await this.acsService.removeCardholder(cardholderId)
-    
+
     this.setStatus(HttpCode.NO_CONTENT)
   }
 
+  /**
+   * Activate/Deactivate existing cardholder
+   * 
+   * @param cardholderId Path variable of unique existing cardholder
+   * @param authorised Query parameter of boolean flag to activate (True)/de-activate(False)
+   * @returns 
+   */
   @Get("/cardholders/{cardholderId}/activate")
   public async activateCardholder(@Path() cardholderId: string, @Query() authorised: boolean): Promise<boolean> { 
     return await this.acsService.authoriseCardholder(cardholderId, authorised)
   }
 
+  /**
+   * Add new card to existing cardholder
+   * 
+   * @param cardholderId Path variables of unique cardholder ID
+   * @param reqB request body to add new card
+   * @returns 
+   */
   @Post("/cardholders/{cardholderId}/cards")
   public async addCard2Cardholder(@Path() cardholderId: string, @Body() reqB: AddCardToCardholderRequest) { 
     const cardInfo  = new CardEntity(
@@ -63,6 +101,13 @@ export class ACSController extends Controller {
     return await this.acsService.addCard2Cardholder(cardholderId, cardInfo.getCard())
   }
 
+  /**
+   * Remove existing card from existing cardholder
+   * 
+   * @param cardholderId Path variable of unique existing cardholder ID
+   * @param cardId Path variable of existing card ID
+   * @returns 
+   */
   @Delete("/cardholders/{cardholderId}/cards/{cardId}")
   public async removeCardFromCardholder(@Path() cardholderId: string, @Path() cardId: string) { 
     return await this.acsService.removeCardFromCardholder(cardholderId, cardId)

@@ -2,11 +2,7 @@
 
 import { UserType } from "../entities/cardholder"
 import { CardholderDetail } from "./gallagher/cardholder"
-import { HrefMixin, IdentityMixin } from "./utils"
-
-export interface BasedResponse {
-    success: boolean
-}
+import { BasedResponse, HrefMixin, IdentityMixin } from "./utils"
 
 export type GetCardholderResponse = CardholderDetail & IdentityMixin & HrefMixin
 
@@ -25,12 +21,7 @@ export interface CreateCardholderResponse {
     }
 }
 
-// todo
-export interface UpdateCardholderRequest {
-
-}
-
-// todo
+export interface UpdateCardholderRequest {}
 export interface UpdateCardholderResponse extends BasedResponse {}
 
 export interface AddCardToCardholderRequest {
@@ -38,10 +29,4 @@ export interface AddCardToCardholderRequest {
     fromInMs?: number,
     validityPeriodInMs?: number
 }
-
-// router.patch('/cardholers/{cardholderId}', ctl.updateCardholder)
-// router.delete('/cardholders/{carholderId}', ctl.removeCardholder)
-// router.post('/cardholders/{carholderId}/cards', ctl.addCard2Cardholder)
-// router.delete('/cardholders/{carholderId}/cards/{cardId}', ctl.removeCardFromCardholder)
-// router.get('/cardholders/{carholderId}/', ctl.activateCardholder)
 
