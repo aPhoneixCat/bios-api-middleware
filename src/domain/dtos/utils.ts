@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { ValidationType } from "../../errors/validation.error";
+
 export function toLowerCamel(name: string): string {
     const upper = name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
     return upper.charAt(0).toLowerCase() + upper.slice(1);
@@ -30,10 +33,9 @@ export const SuccessResponse = (message: string, data?: any) => {
     }
 }
 
-export const ErrResponse = (errMsg: string, error?: any) => {
+export const ErrResponse = (error?: any) => {
     return {
         success: false,
-        message: errMsg,
         error: error
     }
-}
+} 

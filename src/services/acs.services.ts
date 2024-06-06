@@ -2,6 +2,7 @@ import { CreateCardholderResponse, GetCardholderResponse, UpdateCardholderRespon
 import { Card, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
 import { CardholderEntity } from "../domain/entities/cardholder";
 import CardholderAPI from "../lib/gallagher-api/cardholders.api";
+import Logger from "../lib/logger";
 import { provideSingleton } from "../utils/provideSingleton";
 
 @provideSingleton(ACSService)

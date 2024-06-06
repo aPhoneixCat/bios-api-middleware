@@ -1,10 +1,14 @@
-import axios, { AxiosHeaders } from "axios"
+import axios, { AxiosError, AxiosHeaders } from "axios"
 import { HttpCode } from "../../constants"
 import { IAPIEndpoint, EndpointConfig } from "../api-endpoint"
 import Logger from "../logger"
 import { GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
 import { AppError } from "../../errors/custom.error"
 import { getAPIKey } from "./utils"
+
+interface GallagherErrorMsgRes {
+    message: string
+}
 
 export class Cardhodlers extends IAPIEndpoint {
 
@@ -34,7 +38,7 @@ export class Cardhodlers extends IAPIEndpoint {
             return data
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
             throw AppError.internalServerWrap(error)
         }
@@ -49,12 +53,11 @@ export class Cardhodlers extends IAPIEndpoint {
     async create(cardholder: GallagherCreateCardholderRequest): Promise<GallagherCreateCardholderResponse> {
         const url = `${this.endpointConfig.endpoint}`
         try {
-            const { status, headers } = await this.axiosClient.post(url, {
+            const { status, headers } = await this.axiosClient.post(url, cardholder, {
                 headers: {
                     'Authorization': getAPIKey(),
                     'Content-Type': 'application/json'
-                },
-                data: cardholder
+                }
             })
 
             if (status != HttpCode.CREATED) {
@@ -62,9 +65,10 @@ export class Cardhodlers extends IAPIEndpoint {
             }
 
             if (headers instanceof AxiosHeaders) {
+                Logger.info(`res headers = ${JSON.stringify(headers)}`)
                 return {
-                    cardholderId: this.extractIdFromURL(headers['Location']),
-                    href: headers['Location']
+                    cardholderId: this.extractIdFromURL(headers['location']),
+                    href: headers['location']
                 }
             } else {
                 Logger.error('No cardholder href return');
@@ -72,7 +76,7 @@ export class Cardhodlers extends IAPIEndpoint {
             }
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
             throw AppError.internalServerWrap(error)
         }
@@ -89,12 +93,11 @@ export class Cardhodlers extends IAPIEndpoint {
     async update(cardholderId: string, requstBody: GallagherUpdateCardholderRequest): Promise<void> {
         const url = `${this.endpointConfig.endpoint}/${cardholderId}`
         try {
-            const { status } = await this.axiosClient.patch(url, {
+            const { status } = await this.axiosClient.patch(url, requstBody, {
                 headers: {
                     'Authorization': getAPIKey(),
                     'Content-Type': 'application/json'
-                },
-                data: requstBody
+                }
             })
 
             if (status != HttpCode.NO_CONTENT) {
@@ -103,7 +106,7 @@ export class Cardhodlers extends IAPIEndpoint {
             }
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
 
             throw AppError.internalServerWrap(error)
@@ -133,7 +136,7 @@ export class Cardhodlers extends IAPIEndpoint {
             }
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
 
             throw AppError.internalServerWrap(error)
@@ -159,7 +162,7 @@ export class Cardhodlers extends IAPIEndpoint {
      * @returns 
      */
     async removeCardFromCardholder(cardholderId: string, cardId: string): Promise<void> {
-        const url = `${this.endpointConfig.endpoint}/${cardholderId}/cards${cardId}`
+        const url = `${this.endpointConfig.endpoint}/${cardholderId}/cards/${cardId}`
         try {
             const { data, status } = await this.axiosClient.delete(url, {
                 headers: {
@@ -173,15 +176,28 @@ export class Cardhodlers extends IAPIEndpoint {
             }
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
             throw AppError.internalServerWrap(error)
         }
     }
 
     private extractIdFromURL(url: string) {
+        Logger.info("url = ", url)
         const urlPieces = url.split('/')
         return urlPieces[urlPieces.length - 1]
+    }
+
+    private buildErrorMessage(error: AxiosError) {
+        const { response } = error;
+        let errMsg;
+        if (response) {
+            errMsg = `${response.statusText}: ${JSON.stringify((response.data as GallagherErrorMsgRes).message)}`
+        } else {
+            errMsg = `${error.status || error.code}: ${error.message}`
+        } 
+    
+        return errMsg;
     }
 }
 

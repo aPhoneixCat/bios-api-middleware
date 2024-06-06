@@ -42,7 +42,7 @@ export abstract class IAPIEndpoint {
 
     private initialInterceptors(axiosClient: AxiosInstance) {
         axiosClient.interceptors.request.use(req => {
-            const printable = `Request: ${req.method?.toUpperCase()} | ${req.url} | ${JSON.stringify(req.data)}`
+            const printable = `Request: ${req.method?.toUpperCase()} | ${req.url} | ${JSON.stringify(req.headers)} | ${JSON.stringify(req.data)}`
             Logger.info(printable)
 
             return req
@@ -50,8 +50,7 @@ export abstract class IAPIEndpoint {
 
         axiosClient.interceptors.response.use(
             (res) => {
-                const printable = `Response: ${res.status} | ${JSON.stringify(res.data)}`
-                Logger.info(printable)
+                Logger.info(`Response: ${res.status} | ${JSON.stringify(res.headers)} | ${JSON.stringify(res.data)}`)
 
                 return res
             },
@@ -60,10 +59,12 @@ export abstract class IAPIEndpoint {
                     return Promise.reject(error)
                 }
             
-                const {config: { method, url }} = error;
-                const printable = 
-                    `Failed to call gallagher ACS[ ${method?.toUpperCase()} ${url}] as ${error.status || error.code}: ${error.message}`
-                Logger.error(printable)
+                const {config: { method, url }, response } = error;
+                if (response) {
+                    Logger.error(`Failed to call [${method?.toUpperCase()} ${url}] as ${response.statusText}: ${JSON.stringify(response.data)}, Cause: ${error.stack}`)
+                } else {
+                    Logger.error(`Failed to call [${method?.toUpperCase()} ${url}] as ${error.status || error.code}: ${error.message}, Cause: ${error.stack}`)
+                }                
 
                 return Promise.reject(error)
             }

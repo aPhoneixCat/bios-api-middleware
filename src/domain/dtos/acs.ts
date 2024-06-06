@@ -2,7 +2,7 @@
 
 import { UserType } from "../entities/cardholder"
 import { CardholderDetail } from "./gallagher/cardholder"
-import { IResponse, HrefMixin, IdentityMixin } from "./utils"
+import { HrefMixin, IdentityMixin } from "./utils"
 
 export type GetCardholderResponse = CardholderDetail & IdentityMixin & HrefMixin
 

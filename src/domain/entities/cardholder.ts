@@ -2,6 +2,7 @@ import moment from "moment";
 
 import { AccessGroup, Card, CardOperation, GallagherCreateCardholderRequest, GallagherUpdateCardholderRequest } from "../dtos/gallagher/cardholder";
 import { HrefMixin } from "../dtos/utils";
+import { envs } from "../../config/env";
 
 // Visitor, vip, staff, shall have different division, access group
 export enum UserType {
@@ -10,10 +11,10 @@ export enum UserType {
     VIP = "vip"
 }
 
-const DIVISION: string = 'https://192.168.16.83:8904/api/divisions/2' // Root Division
-const ONE_IN_ONE_OUT_AG: string = 'https://192.168.16.83:8904/api/access_groups/611' // Linked to root division
-const UNLIMITED_IN_OUT_AG: string = 'https://192.168.16.83:8904/api/access_groups/611' // Linked to root division
-const QR_CODE_CARD_TYPE_URL: string = 'https://192.168.16.83:8904/api/card_types/601'
+const DIVISION: string = envs.GALLAGHER_DIVISION_URL 
+const ONE_IN_ONE_OUT_AG: string = envs.GALLAGHER_ONE_IN_ONE_OUT_AG_URL 
+const UNLIMITED_IN_OUT_AG: string = envs.GALLAGHER_UNLIMITED_IN_OUT_AG_URL 
+const QR_CODE_CARD_TYPE_URL: string = envs.GALLAGHER_QR_CODE_CARD_TYPE_URL
 
 export class UserPermission {
     private readonly divisionUrl: string
@@ -49,7 +50,7 @@ export class CardEntity {
     private readonly from: moment.Moment
     private readonly until: moment.Moment
 
-    constructor(cardNumber?: string, validityPeriodInMs?: number, fromInMs?: number) {
+    constructor(cardNumber?: string, fromInMs?: number, validityPeriodInMs?: number) {
         this.cardNumber = cardNumber || ''
         this.validityPeriodInMs = validityPeriodInMs ? validityPeriodInMs : 5 * 60 * 1000;
         this.fromInMs = fromInMs ? fromInMs : moment.now().valueOf()
