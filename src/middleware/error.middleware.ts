@@ -7,9 +7,7 @@ import { ErrResponse } from '../domain/dtos/utils';
 import Logger from '../lib/logger';
 
 export class ErrorMiddleware {
-    //* Dependency injection
-    // constructor() {}
-
+    
     public static handleError = (error: unknown, _: Request, res: Response, next: NextFunction): void => {
         if (error instanceof ValidationError) {
             const { message, name, validationErrors, stack } = error;
