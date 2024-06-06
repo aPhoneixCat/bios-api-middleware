@@ -115,6 +115,8 @@ export class CardholderEntity {
             cards: [ this.cardEntity.getCard() ],
             accessGroups: [accessGroup]
         } : {
+            firstName: this.userName,
+            lastName: this.userName,
             shortName: this.userName,
             authorised: this.authorise,
             division: division,
