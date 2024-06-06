@@ -2,7 +2,7 @@
 
 import { UserType } from "../entities/cardholder"
 import { CardholderDetail } from "./gallagher/cardholder"
-import { BasedResponse, HrefMixin, IdentityMixin } from "./utils"
+import { IResponse, HrefMixin, IdentityMixin } from "./utils"
 
 export type GetCardholderResponse = CardholderDetail & IdentityMixin & HrefMixin
 
@@ -21,8 +21,10 @@ export interface CreateCardholderResponse {
     }
 }
 
+// todo
 export interface UpdateCardholderRequest {}
-export interface UpdateCardholderResponse extends BasedResponse {}
+// todo
+export interface UpdateCardholderResponse {}
 
 export interface AddCardToCardholderRequest {
     cardNumber: string,

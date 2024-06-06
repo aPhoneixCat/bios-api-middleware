@@ -1,9 +1,10 @@
 import axios, { AxiosHeaders } from "axios"
 import { HttpCode } from "../../constants"
-import { IAPIEndpoint, EndpointConfig, getAPIKey } from "./api-endpoint"
+import { IAPIEndpoint, EndpointConfig } from "../api-endpoint"
 import Logger from "../logger"
-import { Card, GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
+import { GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
 import { AppError } from "../../errors/custom.error"
+import { getAPIKey } from "./utils"
 
 export class Cardhodlers extends IAPIEndpoint {
 
@@ -33,7 +34,7 @@ export class Cardhodlers extends IAPIEndpoint {
             return data
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`${error.code}: ${error.message}`)
+                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
             }
             throw AppError.internalServerWrap(error)
         }
@@ -50,7 +51,8 @@ export class Cardhodlers extends IAPIEndpoint {
         try {
             const { status, headers } = await this.axiosClient.post(url, {
                 headers: {
-                    'Authorization': getAPIKey()
+                    'Authorization': getAPIKey(),
+                    'Content-Type': 'application/json'
                 },
                 data: cardholder
             })
@@ -70,7 +72,7 @@ export class Cardhodlers extends IAPIEndpoint {
             }
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`${error.code}: ${error.message}`)
+                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
             }
             throw AppError.internalServerWrap(error)
         }
@@ -84,12 +86,13 @@ export class Cardhodlers extends IAPIEndpoint {
      * @param requestBody
      * @returns 
      */
-    async update(cardholderId: string, requstBody: GallagherUpdateCardholderRequest): Promise<boolean> {
+    async update(cardholderId: string, requstBody: GallagherUpdateCardholderRequest): Promise<void> {
         const url = `${this.endpointConfig.endpoint}/${cardholderId}`
         try {
             const { status } = await this.axiosClient.patch(url, {
                 headers: {
-                    'Authorization': getAPIKey()
+                    'Authorization': getAPIKey(),
+                    'Content-Type': 'application/json'
                 },
                 data: requstBody
             })
@@ -98,11 +101,9 @@ export class Cardhodlers extends IAPIEndpoint {
                 Logger.error('Deleting the cardholder failed');
                 throw AppError.internalServer('Deleting the cardholder failed')
             }
-
-            return true
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                throw AppError.internalServer(`${error.code}: ${error.message}`)
+                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
             }
 
             throw AppError.internalServerWrap(error)
@@ -117,7 +118,7 @@ export class Cardhodlers extends IAPIEndpoint {
      * @param requestBody
      * @returns 
      */
-    async remove(cardholderId: string): Promise<boolean> {
+    async remove(cardholderId: string): Promise<void> {
         const url = `${this.endpointConfig.endpoint}/${cardholderId}`
         try {
             const { data, status } = await this.axiosClient.delete(url, {
@@ -130,13 +131,12 @@ export class Cardhodlers extends IAPIEndpoint {
                 Logger.error('Deleting the cardholder failed');
                 throw AppError.internalServer('Deleting the cardholder failed')
             }
-
-            return true
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                return Promise.reject(AppError.internalServer(`${error.code}: ${error.message}`))
+                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
             }
-            return Promise.reject(AppError.internalServerWrap(error))
+
+            throw AppError.internalServerWrap(error)
         }
     }
 
@@ -147,8 +147,8 @@ export class Cardhodlers extends IAPIEndpoint {
      * @param requestBody
      * @returns 
      */
-    async addCard2Cardholder(cardholderId: string, gallagherUpdateReq: GallagherUpdateCardholderRequest): Promise<boolean> {
-        return await this.update(cardholderId, gallagherUpdateReq)
+    async addCard2Cardholder(cardholderId: string, gallagherUpdateReq: GallagherUpdateCardholderRequest): Promise<void> {
+        await this.update(cardholderId, gallagherUpdateReq)
     }
 
     /**
@@ -158,7 +158,7 @@ export class Cardhodlers extends IAPIEndpoint {
      * @param id 
      * @returns 
      */
-    async removeCardFromCardholder(cardholderId: string, cardId: string): Promise<boolean> {
+    async removeCardFromCardholder(cardholderId: string, cardId: string): Promise<void> {
         const url = `${this.endpointConfig.endpoint}/${cardholderId}/cards${cardId}`
         try {
             const { data, status } = await this.axiosClient.delete(url, {
@@ -171,13 +171,11 @@ export class Cardhodlers extends IAPIEndpoint {
                 Logger.error('Deleting the cardholder failed');
                 throw AppError.internalServer('Deleting the cardholder failed')
             }
-
-            return true
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
-                return Promise.reject(AppError.internalServer(`${error.code}: ${error.message}`))
+                throw AppError.internalServer(`Failed to call gallagher ACS as ${error.status || error.code}: ${error.message}`)
             }
-            return Promise.reject(AppError.internalServerWrap(error))
+            throw AppError.internalServerWrap(error)
         }
     }
 

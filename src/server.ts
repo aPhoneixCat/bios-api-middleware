@@ -4,7 +4,6 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from "swagger-ui-express"
-
 import { ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
@@ -19,6 +18,7 @@ import { RegisterRoutes } from "./routes";
 import { ACSController } from './controllers/acs.controller';
 import { EventController } from './controllers/events.controller';
 import { WIFIController } from './controllers/wifi.controller';
+import morgan from 'morgan';
 // ########################################################################
 
 interface ServerOptions {
@@ -50,6 +50,7 @@ export class Server {
             windowMs: SIXTY * SIXTY * ONE_THOUSAND,
             message: 'Too many requests from this IP, please try again in one hour'
         }));
+        this.app.use(require('express-status-monitor')());
 
         // Swagger API
         this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, {
@@ -59,7 +60,6 @@ export class Server {
                 validatorUrl: null
             }
         }))
-        this.app.use('/', (_, res) => res.redirect('/api-docs'))
 
         RegisterRoutes(this.app);
 
@@ -71,7 +71,7 @@ export class Server {
         this.app.use(ErrorMiddleware.handleError);
 
         this.serverListener = this.app.listen(this.port, () => {
-            Logger.info(`✓ Server running on port http://localhost:${this.port}`);
+            Logger.info(`✓ Server running; Check status on http://localhost:${this.port}/status`);
             Logger.info(`✓ Started Swagger UI at http://localhost:${this.port}/api-docs`)
         });
 

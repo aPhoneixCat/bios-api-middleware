@@ -10,10 +10,10 @@ export enum UserType {
     VIP = "vip"
 }
 
-const DIVISION: string = ''
-const ONE_IN_ONE_OUT_AG: string = ''
-const UNLIMITED_IN_OUT_AG: string = ''
-const QR_CODE_CARD_TYPE_URL: string = 'https://10.6.79.89:8904/api/card_types/606'
+const DIVISION: string = 'https://192.168.16.83:8904/api/divisions/2' // Root Division
+const ONE_IN_ONE_OUT_AG: string = 'https://192.168.16.83:8904/api/access_groups/611' // Linked to root division
+const UNLIMITED_IN_OUT_AG: string = 'https://192.168.16.83:8904/api/access_groups/611' // Linked to root division
+const QR_CODE_CARD_TYPE_URL: string = 'https://192.168.16.83:8904/api/card_types/601'
 
 export class UserPermission {
     private readonly divisionUrl: string
@@ -106,6 +106,8 @@ export class CardholderEntity {
         const accessGroup = userPermission.getAccessGroup()
 
         return this.cardEntity ? {
+            firstName: this.userName,
+            lastName: this.userName,
             shortName: this.userName,
             authorised: this.authorise,
             division: division,

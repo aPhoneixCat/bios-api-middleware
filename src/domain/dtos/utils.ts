@@ -15,14 +15,25 @@ export interface OptionalHref {
     href?: string;
 }
 
-export interface SuccessResponse<T> {
+export interface IResponse {
     success: boolean,
     message: string,
-    data: T
+    data?: any,
+    error?: any
 }
 
-export interface ErrorResponse {
-    success: boolean,
-    message: string,
-    error: Error
+export const SuccessResponse = (message: string, data?: any) => {
+    return {
+        success: true,
+        message: message,
+        data: data
+    }
+}
+
+export const ErrResponse = (errMsg: string, error?: any) => {
+    return {
+        success: false,
+        message: errMsg,
+        error: error
+    }
 }

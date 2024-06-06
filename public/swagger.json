@@ -64,730 +64,20 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"AccessZoneRef": {
-				"description": "AccessZone represents",
+			"IResponse": {
 				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"HrefMixin": {
-				"properties": {
-					"href": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PdfDefinition": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"id": {
-						"type": "string"
-					},
-					"type": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name",
-					"id",
-					"type"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Pdf": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"definition": {
-						"$ref": "#/components/schemas/PdfDefinition"
-					},
-					"value": {
-						"$ref": "#/components/schemas/HrefMixin"
-					}
-				},
-				"required": [
-					"href",
-					"definition",
-					"value"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PersonalDataDefinition": {
-				"properties": {
-					"@email": {
-						"$ref": "#/components/schemas/Pdf"
-					},
-					"@phone": {
-						"$ref": "#/components/schemas/Pdf"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Status": {
-				"properties": {
-					"value": {
-						"type": "string"
-					},
-					"type": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"value",
-					"type"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CardTypeRef": {
-				"description": "Reference to a card type",
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Invitation": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"mobile": {
-						"type": "string"
-					},
-					"singleFactorOnly": {
+					"success": {
 						"type": "boolean"
 					},
-					"status": {
+					"message": {
 						"type": "string"
 					},
-					"href": {
-						"type": "string"
-					}
+					"data": {},
+					"error": {}
 				},
 				"required": [
-					"email",
-					"mobile",
-					"singleFactorOnly",
-					"status",
-					"href"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Card": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"number": {
-						"type": "string"
-					},
-					"cardSerialNumber": {
-						"type": "string"
-					},
-					"issueLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"type": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/CardTypeRef"
-							},
-							{
-								"$ref": "#/components/schemas/HrefMixin"
-							}
-						]
-					},
-					"invitation": {
-						"$ref": "#/components/schemas/Invitation"
-					},
-					"from": {
-						"type": "string"
-					},
-					"until": {
-						"type": "string"
-					},
-					"credentialClass": {
-						"type": "string"
-					},
-					"trace": {
-						"type": "boolean"
-					},
-					"lastPrintedOrEncodedTime": {
-						"type": "string"
-					},
-					"lastPrintedOrEncodedIssueLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"pin": {
-						"type": "string"
-					},
-					"visitorContractor": {
-						"type": "boolean"
-					},
-					"ownedBySite": {
-						"type": "boolean"
-					},
-					"credentialId": {
-						"type": "string"
-					},
-					"bleFacilityId": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AccessGroupRef": {
-				"description": "Access Groups is what a user is assigned to to provide access to doors",
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AccessGroup": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"accessGroup": {
-						"$ref": "#/components/schemas/AccessGroupRef"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"from": {
-						"type": "string"
-					},
-					"until": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OperatorGroupRef": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OperatorGroup": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"operatorGroup": {
-						"$ref": "#/components/schemas/OperatorGroupRef"
-					}
-				},
-				"required": [
-					"href",
-					"operatorGroup"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CompetencyRef": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Competency": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"competency": {
-						"$ref": "#/components/schemas/CompetencyRef"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"expiryWarning": {
-						"type": "string"
-					},
-					"expiry": {
-						"type": "string"
-					},
-					"enablement": {
-						"type": "string"
-					},
-					"comment": {
-						"type": "string"
-					},
-					"limitedCredit": {
-						"type": "boolean"
-					},
-					"credit": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"href",
-					"competency",
-					"status",
-					"expiryWarning",
-					"expiry",
-					"enablement",
-					"comment",
-					"limitedCredit",
-					"credit"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Notifications": {
-				"properties": {
-					"enabled": {
-						"type": "boolean"
-					},
-					"from": {
-						"type": "string"
-					},
-					"until": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"enabled",
-					"from",
-					"until"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RoleRef": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Cardholder": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name",
-					"firstName",
-					"lastName"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Relationship": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/RoleRef"
-					},
-					"cardholder": {
-						"$ref": "#/components/schemas/Cardholder"
-					}
-				},
-				"required": [
-					"href",
-					"role",
-					"cardholder"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Locker": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"locker": {
-						"$ref": "#/components/schemas/AllocatedLocker"
-					},
-					"from": {
-						"type": "string"
-					},
-					"until": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"locker",
-					"from",
-					"until"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AllocatedLocker": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"shortName": {
-						"type": "string"
-					},
-					"lockerBank": {
-						"$ref": "#/components/schemas/Locker"
-					}
-				},
-				"required": [
-					"href",
-					"name",
-					"shortName",
-					"lockerBank"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ElevatorGroup": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"elevatorGroup": {
-						"$ref": "#/components/schemas/OperatorGroupRef"
-					},
-					"accessZone": {
-						"$ref": "#/components/schemas/AccessZoneRef"
-					},
-					"enableCaptureFeatures": {
-						"type": "boolean"
-					},
-					"enableCodeBlueFeatures": {
-						"type": "boolean"
-					},
-					"enableExpressFeatures": {
-						"type": "boolean"
-					},
-					"enableServiceFeatures": {
-						"type": "boolean"
-					},
-					"enableService2Features": {
-						"type": "boolean"
-					},
-					"enableService3Features": {
-						"type": "boolean"
-					},
-					"enableVipFeatures": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"href",
-					"elevatorGroup",
-					"accessZone",
-					"enableCaptureFeatures",
-					"enableCodeBlueFeatures",
-					"enableExpressFeatures",
-					"enableServiceFeatures",
-					"enableService2Features",
-					"enableService3Features",
-					"enableVipFeatures"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OperatorRef": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"href",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Redaction": {
-				"properties": {
-					"href": {
-						"type": "string"
-					},
-					"type": {
-						"type": "string"
-					},
-					"when": {
-						"type": "string"
-					},
-					"before": {
-						"type": "string"
-					},
-					"status": {
-						"type": "string"
-					},
-					"redactionOperator": {
-						"$ref": "#/components/schemas/OperatorRef"
-					}
-				},
-				"required": [
-					"href",
-					"type",
-					"when",
-					"before",
-					"status",
-					"redactionOperator"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CardholderDetail": {
-				"description": "https://gallaghersecurity.github.io/cc-rest-docs/ref/cardholders.html#definition-Cardholder-card",
-				"properties": {
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
-						"type": "string"
-					},
-					"shortName": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"authorised": {
-						"type": "boolean"
-					},
-					"lastSuccessfulAccessTime": {
-						"type": "string"
-					},
-					"lastSuccessfulAccessZone": {
-						"$ref": "#/components/schemas/AccessZoneRef"
-					},
-					"serverDisplayName": {
-						"type": "string"
-					},
-					"division": {
-						"$ref": "#/components/schemas/HrefMixin"
-					},
-					"@email": {
-						"type": "string"
-					},
-					"@phone": {
-						"type": "string"
-					},
-					"personalDataDefinitions": {
-						"items": {
-							"$ref": "#/components/schemas/PersonalDataDefinition"
-						},
-						"type": "array"
-					},
-					"cards": {
-						"items": {
-							"$ref": "#/components/schemas/Card"
-						},
-						"type": "array"
-					},
-					"accessGroups": {
-						"items": {
-							"$ref": "#/components/schemas/AccessGroup"
-						},
-						"type": "array"
-					},
-					"operatorGroups": {
-						"items": {
-							"$ref": "#/components/schemas/OperatorGroup"
-						},
-						"type": "array"
-					},
-					"competencies": {
-						"items": {
-							"$ref": "#/components/schemas/Competency"
-						},
-						"type": "array"
-					},
-					"updateLocation": {
-						"$ref": "#/components/schemas/HrefMixin"
-					},
-					"notes": {
-						"type": "string"
-					},
-					"notifications": {
-						"$ref": "#/components/schemas/Notifications"
-					},
-					"relationships": {
-						"items": {
-							"$ref": "#/components/schemas/Relationship"
-						},
-						"type": "array"
-					},
-					"lockers": {
-						"items": {
-							"$ref": "#/components/schemas/Locker"
-						},
-						"type": "array"
-					},
-					"elevatorGroups": {
-						"items": {
-							"$ref": "#/components/schemas/ElevatorGroup"
-						},
-						"type": "array"
-					},
-					"redactions": {
-						"items": {
-							"$ref": "#/components/schemas/Redaction"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"authorised"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IdentityMixin": {
-				"properties": {
-					"id": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GetCardholderResponse": {
-				"allOf": [
-					{
-						"$ref": "#/components/schemas/CardholderDetail"
-					},
-					{
-						"$ref": "#/components/schemas/IdentityMixin"
-					},
-					{
-						"$ref": "#/components/schemas/HrefMixin"
-					}
-				]
-			},
-			"CreateCardholderResponse": {
-				"properties": {
-					"cardholderId": {
-						"type": "string"
-					},
-					"card": {
-						"properties": {
-							"expiredAt": {
-								"type": "number",
-								"format": "double"
-							},
-							"cardId": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"expiredAt",
-							"cardId"
-						],
-						"type": "object"
-					}
-				},
-				"required": [
-					"cardholderId"
+					"success",
+					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -871,7 +161,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetCardholderResponse"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
@@ -894,11 +184,61 @@
 					}
 				]
 			},
+			"patch": {
+				"operationId": "UpdateCardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "A dummy API, currently, we don't have any requirement on it. Might add in the future.",
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "path variable with unique cardholder ID",
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "request body to update cardholder",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCardholderRequest",
+								"description": "request body to update cardholder"
+							}
+						}
+					}
+				}
+			},
 			"delete": {
 				"operationId": "RemoveCardholder",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
 					}
 				},
 				"description": "Delete existing cardholder",
@@ -928,7 +268,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CreateCardholderResponse"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
@@ -954,44 +294,6 @@
 				}
 			}
 		},
-		"/acs/cardholers/{cardholderId}": {
-			"patch": {
-				"operationId": "UpdateCardholder",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Update cardholder information",
-				"tags": [
-					"ACS"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "path variable with unique cardholder ID",
-						"in": "path",
-						"name": "cardholderId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "request body to update cardholder",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateCardholderRequest",
-								"description": "request body to update cardholder"
-							}
-						}
-					}
-				}
-			}
-		},
 		"/acs/cardholders/{cardholderId}/activate": {
 			"get": {
 				"operationId": "ActivateCardholder",
@@ -1001,7 +303,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "boolean"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
@@ -1043,7 +345,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "boolean"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
@@ -1088,7 +390,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "boolean"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}

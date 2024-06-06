@@ -1,4 +1,4 @@
-import { CreateCardholderResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
+import { CreateCardholderResponse, GetCardholderResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
 import { Card, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
 import { CardholderEntity } from "../domain/entities/cardholder";
 import CardholderAPI from "../lib/gallagher-api/cardholders.api";
@@ -14,9 +14,16 @@ export default class ACSService {
      * @returns 
      */
     public async getCardholder(cardholerId: string): Promise<GallagherGetCardholderDetailResponse> {
-        return await CardholderAPI.get(cardholerId) 
+        const cardholderDetail =  await CardholderAPI.get(cardholerId)
+        return cardholderDetail as GetCardholderResponse
     }
 
+    /**
+     * Create a cardholder 
+     * 
+     * @param cardholderEntity 
+     * @returns 
+     */
     public async createCardholder(cardholderEntity: CardholderEntity): Promise<CreateCardholderResponse> {
         const gallagherResponse = await CardholderAPI.create(cardholderEntity.toCreateCardholderRequest())
 
@@ -39,9 +46,7 @@ export default class ACSService {
     }
 
     // TODO
-    public async updateCardholder(cardholderId: string, cardholderUpdateEntity: CardholderEntity): Promise<boolean> {
-        return true
-    }
+    public async updateCardholder(cardholderId: string, cardholderUpdateEntity: CardholderEntity): Promise<void> {}
 
     /**
      * Remove cardholder 
@@ -49,7 +54,7 @@ export default class ACSService {
      * @param cardholerId cardholderId to identify cardholder
      * @returns 
      */
-    public async removeCardholder(cardholerId: string): Promise<boolean> {
+    public async removeCardholder(cardholerId: string): Promise<void> {
         return await CardholderAPI.remove(cardholerId) 
     }
 
@@ -60,25 +65,46 @@ export default class ACSService {
      * @param authorised true - authorised, false - not authorised.
      * @returns
      */
-    public async authoriseCardholder(cardholerId: string, authorised: boolean): Promise<boolean> {
+    public async authoriseCardholder(cardholerId: string, authorised: boolean): Promise<void> {
         const updateRequest: GallagherUpdateCardholderRequest = {
             authorised: authorised
         }
         
-        return await CardholderAPI.update(cardholerId, updateRequest) 
+        await CardholderAPI.update(cardholerId, updateRequest) 
     }
 
-    public async addCard2Cardholder(cardholerId: string, card: Card): Promise<boolean> {
+    /**
+     * Add new card to an existing cardholder
+     * 
+     * @param cardholerId 
+     * @param card 
+     * @returns 
+     */
+    public async addCard2Cardholder(cardholerId: string, card: Card): Promise<void> {
         const addCardReq: GallagherUpdateCardholderRequest = {
-
+            cards: {
+                add: [ card ]
+            }
         }
-        return await CardholderAPI.addCard2Cardholder(cardholerId, addCardReq)
+        await CardholderAPI.addCard2Cardholder(cardholerId, addCardReq)
     }
 
-    public async removeCardFromCardholder(cardholerId: string, cardId: string): Promise<boolean> {
-        return await CardholderAPI.removeCardFromCardholder(cardholerId, cardId)
+    /**
+     * Remove card from an existing cardholder
+     * 
+     * @param cardholerId 
+     * @param cardId 
+     * @returns 
+     */
+    public async removeCardFromCardholder(cardholerId: string, cardId: string): Promise<void> {
+        await CardholderAPI.removeCardFromCardholder(cardholerId, cardId)
     }
 
+    /**
+     * Extract the item id from Gallagher item url.
+     * @param url 
+     * @returns 
+     */
     private extractIdFromURL(url: string) {
         const urlPieces = url.split('/')
         return urlPieces[urlPieces.length - 1]

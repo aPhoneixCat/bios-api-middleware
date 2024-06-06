@@ -6,7 +6,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "rootDir": "./src",
-    "types": ["reflect-metadata"],
+    //"types": ["reflect-metadata"],
     "typeRoots": ["./node_modules/@types"],
     "sourceMap": true,
     "outDir": "dist/",
