@@ -11,6 +11,15 @@ export enum UserType {
     VIP = "vip"
 }
 
+export enum CardState {
+    ACTIVE = 'Active',
+    DISABLED = 'Disabled',
+    LOST = 'Lost',
+    STOLEN = 'Stolen',
+    DAMAGED = 'Damaged',
+    EXPIRED = 'Expired'
+}
+
 const DIVISION: string = envs.GALLAGHER_DIVISION_URL 
 const ONE_IN_ONE_OUT_AG: string = envs.GALLAGHER_ONE_IN_ONE_OUT_AG_URL 
 const UNLIMITED_IN_OUT_AG: string = envs.GALLAGHER_UNLIMITED_IN_OUT_AG_URL 
