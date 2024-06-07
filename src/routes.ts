@@ -84,9 +84,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UpdateCardholderRequest": {
+    "RefreshCardholderCardRequest": {
         "dataType": "refObject",
         "properties": {
+            "existingCardId": {"dataType":"string","required":true},
+            "card2Add": {"ref":"AddCardToCardholderRequest","required":true},
         },
         "additionalProperties": false,
     },
@@ -243,14 +245,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/api/acs/cardholders/:cardholderId',
+        app.patch('/api/acs/cardholders/:cardholderId/refresh',
             ...(fetchMiddlewares<RequestHandler>(ACSController)),
-            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.updateCardholder)),
+            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.refreshCardholder)),
 
-            async function ACSController_updateCardholder(request: ExRequest, response: ExResponse, next: any) {
+            async function ACSController_refreshCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
-                    reqB: {"in":"body","name":"reqB","required":true,"ref":"UpdateCardholderRequest"},
+                    reqB: {"in":"body","name":"reqB","required":true,"ref":"RefreshCardholderCardRequest"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -267,7 +269,7 @@ export function RegisterRoutes(app: Router) {
                 }
 
               await templateService.apiHandler({
-                methodName: 'updateCardholder',
+                methodName: 'refreshCardholder',
                 controller,
                 response,
                 next,

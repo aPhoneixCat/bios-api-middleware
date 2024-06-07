@@ -114,6 +114,17 @@ export class Cardhodlers extends IAPIEndpoint {
     }
 
     /**
+     * Refresh card to cardholder:
+     * 
+     * @param id 
+     * @param requestBody
+     * @returns 
+     */
+    async refreshCardOfCardholder(cardholderId: string, gallagherUpdateReq: GallagherUpdateCardholderRequest): Promise<void> {
+        await this.update(cardholderId, gallagherUpdateReq)
+    }
+
+    /**
      * Remove cardholder:
      * https://gallaghersecurity.github.io/cc-rest-docs/ref/cardholders.html#/definitions/Cardholder%20PATCH%20example
      * 
@@ -141,17 +152,6 @@ export class Cardhodlers extends IAPIEndpoint {
 
             throw AppError.internalServerWrap(error)
         }
-    }
-
-    /**
-     * Add card to cardholder:
-     * 
-     * @param id 
-     * @param requestBody
-     * @returns 
-     */
-    async addCard2Cardholder(cardholderId: string, gallagherUpdateReq: GallagherUpdateCardholderRequest): Promise<void> {
-        await this.update(cardholderId, gallagherUpdateReq)
     }
 
     /**

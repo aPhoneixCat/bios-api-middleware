@@ -132,8 +132,19 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UpdateCardholderRequest": {
-				"properties": {},
+			"RefreshCardholderCardRequest": {
+				"properties": {
+					"existingCardId": {
+						"type": "string"
+					},
+					"card2Add": {
+						"$ref": "#/components/schemas/AddCardToCardholderRequest"
+					}
+				},
+				"required": [
+					"existingCardId",
+					"card2Add"
+				],
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -183,49 +194,6 @@
 						}
 					}
 				]
-			},
-			"patch": {
-				"operationId": "UpdateCardholder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "A dummy API, currently, we don't have any requirement on it. Might add in the future.",
-				"tags": [
-					"ACS"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "path variable with unique cardholder ID",
-						"in": "path",
-						"name": "cardholderId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "request body to update cardholder",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateCardholderRequest",
-								"description": "request body to update cardholder"
-							}
-						}
-					}
-				}
 			},
 			"delete": {
 				"operationId": "RemoveCardholder",
@@ -288,6 +256,51 @@
 							"schema": {
 								"$ref": "#/components/schemas/CreateCardholderRequest",
 								"description": "request body to add cardholder"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/acs/cardholders/{cardholderId}/refresh": {
+			"patch": {
+				"operationId": "RefreshCardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Refresh card in cardholder",
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "path variable with unique cardholder ID",
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "request body to refresh card in cardholder",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshCardholderCardRequest",
+								"description": "request body to refresh card in cardholder"
 							}
 						}
 					}

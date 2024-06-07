@@ -1,6 +1,8 @@
-import { CreateCardholderResponse, GetCardholderResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
+import { envs } from "../config/env";
+import { CreateCardholderResponse, GetCardholderResponse, RefreshCardholderCardRequest, RefreshCardholderCardResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
 import { Card, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
-import { CardholderEntity } from "../domain/entities/cardholder";
+import { CardEntity, CardholderEntity } from "../domain/entities/cardholder";
+import { AppError } from "../errors/custom.error";
 import CardholderAPI from "../lib/gallagher-api/cardholders.api";
 import Logger from "../lib/logger";
 import { provideSingleton } from "../utils/provideSingleton";
@@ -46,8 +48,45 @@ export default class ACSService {
         return { cardholderId: gallagherResponse.cardholderId }
     }
 
-    // TODO
-    public async updateCardholder(cardholderId: string, cardholderUpdateEntity: CardholderEntity): Promise<void> {}
+    /**
+     * Refresh existing card of a cardholder
+     * 
+     * @param cardholderId cardholderId
+     * @param existingCardId card to rmove
+     * @param cardEntity card to 
+     */
+    public async refreshCardInCardholder(cardholderId: string, existingCardId: string, cardEntity: CardEntity): Promise<RefreshCardholderCardResponse> {
+        const refreshReq: GallagherUpdateCardholderRequest = {
+            cards: {
+                remove: [
+                    { 
+                        href: this.buildCardHref(cardholderId, existingCardId)
+                    }
+                ],
+                add: [ cardEntity.getCard() ]
+            }
+        }
+        
+        await CardholderAPI.update(cardholderId, refreshReq)
+
+        const cardholderDetail = await CardholderAPI.get(cardholderId)
+        const cards = cardholderDetail.cards
+        if (!cards) {
+            throw AppError.internalServer('Unexceped error: no card find in cardholder.')
+        }
+
+        return  {
+            cardholderId: cardholderId,
+            newCard: {
+                cardId: this.extractIdFromURL(cards[0].href!),
+                expiredAt: cardEntity.expiredAtInMs()
+            }
+        } as RefreshCardholderCardResponse
+    }
+
+    private buildCardHref(cardholderId: string, existingCardId: string) {
+        return `${envs.GALLAGHER_API_URL}api/cardholders/${cardholderId}/cards/${existingCardId}`
+    }
 
     /**
      * Remove cardholder 
@@ -66,12 +105,12 @@ export default class ACSService {
      * @param authorised true - authorised, false - not authorised.
      * @returns
      */
-    public async authoriseCardholder(cardholerId: string, authorised: boolean): Promise<void> {
+    public async authoriseCardholder(cardholderId: string, authorised: boolean): Promise<void> {
         const updateRequest: GallagherUpdateCardholderRequest = {
             authorised: authorised
         }
         
-        await CardholderAPI.update(cardholerId, updateRequest) 
+        await CardholderAPI.update(cardholderId, updateRequest) 
     }
 
     /**
@@ -87,7 +126,7 @@ export default class ACSService {
                 add: [ card ]
             }
         }
-        await CardholderAPI.addCard2Cardholder(cardholerId, addCardReq)
+        await CardholderAPI.update(cardholerId, addCardReq)
     }
 
     /**

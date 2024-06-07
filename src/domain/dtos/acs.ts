@@ -26,6 +26,22 @@ export interface UpdateCardholderRequest {}
 // todo
 export interface UpdateCardholderResponse {}
 
+// Refresh cards of cardholder
+export interface RefreshCardholderCardRequest {
+    existingCardId: string,
+    card2Add: AddCardToCardholderRequest
+}
+export interface RefreshCardholderCardResponse {
+    cardholderId: string,
+    newCard: {
+        cardId: string,
+        expiredAt: number
+    }
+}
+
+// todo
+export interface UpdateCardholderResponse {}
+
 export interface AddCardToCardholderRequest {
     cardNumber: string,
     fromInMs?: number,

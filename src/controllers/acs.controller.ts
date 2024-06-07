@@ -2,7 +2,7 @@ import { Get, Post, Body, Path, Route, Tags, Delete, Controller, Patch, Query, P
 import {
 	AddCardToCardholderRequest,
 	CreateCardholderRequest,
-	UpdateCardholderRequest
+	RefreshCardholderCardRequest
 } from '../domain/dtos/acs';
 import ACSService from '../services/acs.services';
 import { CardEntity, CardholderEntity } from '../domain/entities/cardholder';
@@ -16,6 +16,7 @@ import { IResponse, SuccessResponse } from '../domain/dtos/utils';
 @Produces('application/json')
 @provideSingleton(ACSController)
 export class ACSController extends Controller {
+	
 	// Dependency Injection
 	constructor(@inject(ACSService) private acsService: ACSService) {
 		super();
@@ -58,17 +59,19 @@ export class ACSController extends Controller {
 	}
 
 	/**
-	 * A dummy API, currently, we don't have any requirement on it. Might add in the future.
+	 * Refresh card in cardholder
 	 *
 	 * @param cardholderId path variable with unique cardholder ID
-	 * @param reqB request body to update cardholder
+	 * @param reqB request body to refresh card in cardholder
 	 */
-	@Patch('/cardholders/{cardholderId}')
-	public async updateCardholder(
+	@Patch('/cardholders/{cardholderId}/refresh')
+	public async refreshCardholder(
 		@Path() cardholderId: string,
-		@Body() reqB: UpdateCardholderRequest
+		@Body() reqB: RefreshCardholderCardRequest
 	): Promise<IResponse> {
-		const updateResponse = await this.acsService.updateCardholder(cardholderId, new CardholderEntity());
+		const cardInfo = new CardEntity(reqB.card2Add.cardNumber, reqB.card2Add.fromInMs, reqB.card2Add.validityPeriodInMs);
+		const updateResponse = await this.acsService.refreshCardInCardholder(cardholderId, reqB.existingCardId, cardInfo);
+
 		return SuccessResponse('Successfully update cardholder', updateResponse);
 	}
 
