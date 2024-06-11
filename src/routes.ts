@@ -8,6 +8,8 @@ import { WIFIController } from './controllers/wifi.controller';
 import { EventController } from './controllers/events.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ACSController } from './controllers/acs.controller';
+import { iocContainer } from './ioc';
+import type { IocContainer, IocContainerFactory } from '@tsoa/runtime';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -45,11 +47,13 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateCardholderResponse": {
+    "IResponse": {
         "dataType": "refObject",
         "properties": {
-            "cardholderId": {"dataType":"string","required":true},
-            "expiredAt": {"dataType":"double","required":true},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"any"},
+            "error": {"dataType":"any"},
         },
         "additionalProperties": false,
     },
@@ -59,14 +63,32 @@ const models: TsoaRoute.Models = {
         "enums": ["visitor","staff","vip"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AddCardToCardholderRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "cardNumber": {"dataType":"string","required":true},
+            "fromInMs": {"dataType":"double"},
+            "validityPeriodInMs": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateCardholderRequest": {
         "dataType": "refObject",
         "properties": {
             "userName": {"dataType":"string","required":true},
             "userType": {"ref":"UserType","required":true},
-            "cardNumber": {"dataType":"string","required":true},
-            "fromInMs": {"dataType":"double"},
-            "validityPeriodInMs": {"dataType":"double"},
+            "authorised": {"dataType":"boolean"},
+            "card2Add": {"ref":"AddCardToCardholderRequest"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RefreshCardholderCardRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "existingCardId": {"dataType":"string","required":true},
+            "card2Add": {"ref":"AddCardToCardholderRequest","required":true},
         },
         "additionalProperties": false,
     },
@@ -97,7 +119,12 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new EventController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<EventController>(EventController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'getLiveEvents',
@@ -128,10 +155,50 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new EventController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<EventController>(EventController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'reportEvents',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/acs/cardholders/:cardholderId',
+            ...(fetchMiddlewares<RequestHandler>(ACSController)),
+            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.getCardholder)),
+
+            async function ACSController_getCardholder(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+              await templateService.apiHandler({
+                methodName: 'getCardholder',
                 controller,
                 response,
                 next,
@@ -149,7 +216,7 @@ export function RegisterRoutes(app: Router) {
 
             async function ACSController_createCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"ref":"CreateCardholderRequest"},
+                    reqB: {"in":"body","name":"reqB","required":true,"ref":"CreateCardholderRequest"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -158,7 +225,12 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new ACSController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'createCardholder',
@@ -173,13 +245,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/api/acs/cardholers/:cardholderId',
+        app.patch('/api/acs/cardholders/:cardholderId/refresh',
             ...(fetchMiddlewares<RequestHandler>(ACSController)),
-            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.updateCardholder)),
+            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.refreshCardholder)),
 
-            async function ACSController_updateCardholder(request: ExRequest, response: ExResponse, next: any) {
+            async function ACSController_refreshCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
+                    reqB: {"in":"body","name":"reqB","required":true,"ref":"RefreshCardholderCardRequest"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -188,10 +261,15 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new ACSController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
-                methodName: 'updateCardholder',
+                methodName: 'refreshCardholder',
                 controller,
                 response,
                 next,
@@ -203,12 +281,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/api/acs/cardholders/:carholderId',
+        app.delete('/api/acs/cardholders/:cardholderId',
             ...(fetchMiddlewares<RequestHandler>(ACSController)),
             ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.removeCardholder)),
 
             async function ACSController_removeCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -217,7 +296,12 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new ACSController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'removeCardholder',
@@ -232,12 +316,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/api/acs/cardholders/:carholderId/cards',
+        app.get('/api/acs/cardholders/:cardholderId/activate',
             ...(fetchMiddlewares<RequestHandler>(ACSController)),
-            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.addCard2Cardholder)),
+            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.activateCardholder)),
 
-            async function ACSController_addCard2Cardholder(request: ExRequest, response: ExResponse, next: any) {
+            async function ACSController_activateCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
+                    authorised: {"in":"query","name":"authorised","required":true,"dataType":"boolean"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -246,7 +332,48 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new ACSController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+              await templateService.apiHandler({
+                methodName: 'activateCardholder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/acs/cardholders/:cardholderId/cards',
+            ...(fetchMiddlewares<RequestHandler>(ACSController)),
+            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.addCard2Cardholder)),
+
+            async function ACSController_addCard2Cardholder(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
+                    reqB: {"in":"body","name":"reqB","required":true,"ref":"AddCardToCardholderRequest"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'addCard2Cardholder',
@@ -261,12 +388,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/api/acs/cardholders/:carholderId/cards/:cardId',
+        app.delete('/api/acs/cardholders/:cardholderId/cards/:cardId',
             ...(fetchMiddlewares<RequestHandler>(ACSController)),
             ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.removeCardFromCardholder)),
 
             async function ACSController_removeCardFromCardholder(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    cardholderId: {"in":"path","name":"cardholderId","required":true,"dataType":"string"},
+                    cardId: {"in":"path","name":"cardId","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -275,39 +404,15 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new ACSController();
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ACSController>(ACSController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
 
               await templateService.apiHandler({
                 methodName: 'removeCardFromCardholder',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/acs/cardholders/:carholderId/activate',
-            ...(fetchMiddlewares<RequestHandler>(ACSController)),
-            ...(fetchMiddlewares<RequestHandler>(ACSController.prototype.activateCardholder)),
-
-            async function ACSController_activateCardholder(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new ACSController();
-
-              await templateService.apiHandler({
-                methodName: 'activateCardholder',
                 controller,
                 response,
                 next,

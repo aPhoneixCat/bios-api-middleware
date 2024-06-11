@@ -1,7 +1,8 @@
 import axios from "axios"
-import { IAPIEndpoint, EndpointConfig, getAPIKey } from "./api-endpoint"
+import { IAPIEndpoint, EndpointConfig } from "../api-endpoint"
 import Logger from "../logger"
 import { EventDetailResponse, EventSearchResponse, EventTypeListResponse } from "../../domain/dtos/gallagher/event"
+import { getAPIKey } from "./utils"
 
 export class Events extends IAPIEndpoint {
 

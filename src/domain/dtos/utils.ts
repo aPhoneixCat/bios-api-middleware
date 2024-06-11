@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { ValidationType } from "../../errors/validation.error";
+
 export function toLowerCamel(name: string): string {
     const upper = name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
     return upper.charAt(0).toLowerCase() + upper.slice(1);
@@ -14,3 +17,25 @@ export interface HrefMixin {
 export interface OptionalHref {
     href?: string;
 }
+
+export interface IResponse {
+    success: boolean,
+    message: string,
+    data?: any,
+    error?: any
+}
+
+export const SuccessResponse = (message: string, data?: any) => {
+    return {
+        success: true,
+        message: message,
+        data: data
+    }
+}
+
+export const ErrResponse = (error?: any) => {
+    return {
+        success: false,
+        error: error
+    }
+} 

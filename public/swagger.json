@@ -64,19 +64,20 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CreateCardholderResponse": {
+			"IResponse": {
 				"properties": {
-					"cardholderId": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
 						"type": "string"
 					},
-					"expiredAt": {
-						"type": "number",
-						"format": "double"
-					}
+					"data": {},
+					"error": {}
 				},
 				"required": [
-					"cardholderId",
-					"expiredAt"
+					"success",
+					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -89,14 +90,8 @@
 				],
 				"type": "string"
 			},
-			"CreateCardholderRequest": {
+			"AddCardToCardholderRequest": {
 				"properties": {
-					"userName": {
-						"type": "string"
-					},
-					"userType": {
-						"$ref": "#/components/schemas/UserType"
-					},
 					"cardNumber": {
 						"type": "string"
 					},
@@ -110,9 +105,45 @@
 					}
 				},
 				"required": [
-					"userName",
-					"userType",
 					"cardNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateCardholderRequest": {
+				"properties": {
+					"userName": {
+						"type": "string"
+					},
+					"userType": {
+						"$ref": "#/components/schemas/UserType"
+					},
+					"authorised": {
+						"type": "boolean"
+					},
+					"card2Add": {
+						"$ref": "#/components/schemas/AddCardToCardholderRequest"
+					}
+				},
+				"required": [
+					"userName",
+					"userType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefreshCardholderCardRequest": {
+				"properties": {
+					"existingCardId": {
+						"type": "string"
+					},
+					"card2Add": {
+						"$ref": "#/components/schemas/AddCardToCardholderRequest"
+					}
+				},
+				"required": [
+					"existingCardId",
+					"card2Add"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -132,85 +163,65 @@
 		}
 	},
 	"paths": {
-		"/events/live": {
+		"/acs/cardholders/{cardholderId}": {
 			"get": {
-				"operationId": "GetLiveEvents",
+				"operationId": "GetCardholder",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Cardholder details",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/EventResponse"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
 					}
 				},
+				"description": "Retrives the details of an existing cardholder.",
 				"tags": [
-					"Events"
+					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"in": "query",
-						"name": "eventType",
-						"required": true,
-						"schema": {
-							"$ref": "#/components/schemas/EventType"
-						}
-					},
-					{
-						"in": "query",
-						"name": "cardholderIds",
-						"required": true,
-						"schema": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						}
-					}
-				]
-			}
-		},
-		"/events/reporting": {
-			"get": {
-				"operationId": "ReportEvents",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/EventResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Events"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "eventType",
+						"description": "Supply the unique cardholdr ID",
+						"in": "path",
+						"name": "cardholderId",
 						"required": true,
 						"schema": {
 							"type": "string"
 						}
-					},
+					}
+				]
+			},
+			"delete": {
+				"operationId": "RemoveCardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete existing cardholder",
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
 					{
-						"in": "query",
-						"name": "cardholderIds",
+						"description": "Path variable of unique cardholder ID",
+						"in": "path",
+						"name": "cardholderId",
 						"required": true,
 						"schema": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
+							"type": "string"
 						}
 					}
 				]
@@ -225,43 +236,55 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CreateCardholderResponse"
+									"$ref": "#/components/schemas/IResponse"
 								}
 							}
 						}
 					}
 				},
+				"description": "Create new cardholder, and optionally add new card",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "request body to add cardholder",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateCardholderRequest"
+								"$ref": "#/components/schemas/CreateCardholderRequest",
+								"description": "request body to add cardholder"
 							}
 						}
 					}
 				}
 			}
 		},
-		"/acs/cardholers/{cardholderId}": {
+		"/acs/cardholders/{cardholderId}/refresh": {
 			"patch": {
-				"operationId": "UpdateCardholder",
+				"operationId": "RefreshCardholder",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
 					}
 				},
+				"description": "Refresh card in cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "path variable with unique cardholder ID",
 						"in": "path",
 						"name": "cardholderId",
 						"required": true,
@@ -269,67 +292,148 @@
 							"type": "string"
 						}
 					}
-				]
-			}
-		},
-		"/acs/cardholders/{carholderId}": {
-			"delete": {
-				"operationId": "RemoveCardholder",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"tags": [
-					"ACS"
 				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/acs/cardholders/{carholderId}/cards": {
-			"post": {
-				"operationId": "AddCard2Cardholder",
-				"responses": {
-					"204": {
-						"description": "No content"
+				"requestBody": {
+					"description": "request body to refresh card in cardholder",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RefreshCardholderCardRequest",
+								"description": "request body to refresh card in cardholder"
+							}
+						}
 					}
-				},
-				"tags": [
-					"ACS"
-				],
-				"security": [],
-				"parameters": []
+				}
 			}
 		},
-		"/acs/cardholders/{carholderId}/cards/{cardId}": {
-			"post": {
-				"operationId": "RemoveCardFromCardholder",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"tags": [
-					"ACS"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/acs/cardholders/{carholderId}/activate": {
+		"/acs/cardholders/{cardholderId}/activate": {
 			"get": {
 				"operationId": "ActivateCardholder",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
 					}
 				},
+				"description": "Activate/Deactivate existing cardholder",
 				"tags": [
 					"ACS"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"description": "Path variable of unique existing cardholder",
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Query parameter of boolean flag to activate (True)/de-activate(False)",
+						"in": "query",
+						"name": "authorised",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/acs/cardholders/{cardholderId}/cards": {
+			"post": {
+				"operationId": "AddCard2Cardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add new card to existing cardholder",
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Path variables of unique cardholder ID",
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "request body to add new card",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddCardToCardholderRequest",
+								"description": "request body to add new card"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/acs/cardholders/{cardholderId}/cards/{cardId}": {
+			"delete": {
+				"operationId": "RemoveCardFromCardholder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove existing card from existing cardholder",
+				"tags": [
+					"ACS"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Path variable of unique existing cardholder ID",
+						"in": "path",
+						"name": "cardholderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Path variable of existing card ID",
+						"in": "path",
+						"name": "cardId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},
