@@ -19,6 +19,7 @@ import { ACSController } from './controllers/acs.controller';
 import { EventController } from './controllers/events.controller';
 import { WIFIController } from './controllers/wifi.controller';
 import morgan from 'morgan';
+import { mailTo } from './lib/mail_server';
 // ########################################################################
 
 interface ServerOptions {
@@ -46,7 +47,7 @@ export class Server {
         this.app.use(CorsMiddleware.handleCors)
         // limit repeated requests to public APIs
         this.app.use(rateLimit({
-            max: ONE_HUNDRED,
+            max: ONE_HUNDRED * ONE_THOUSAND,
             windowMs: SIXTY * SIXTY * ONE_THOUSAND,
             message: 'Too many requests from this IP, please try again in one hour'
         }));

@@ -1,6 +1,9 @@
 {
   "name": "bios-api-middleware",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20.14.0"
+  },
   "description": "A building's inter-operational system, a.k.a, api middleware/gateway providing interfaces to help external integration with building's intranet systems.",
   "main": "dist/app.js",
   "scripts": {
@@ -8,7 +11,10 @@
     "prebuild": "npm run swagger",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
     "build": "rimraf ./dist && tsoa spec-and-routes && tsc",
-    "start": "npm run build && node dist/app.js",
+    "start": "pm2 start ecosystem.config.js --only B-IOS --env production",
+    "start-dev": "pm2 start ecosystem.config.js --only B-IOS --env development",
+    "start-event-bot": "pm2 start ecosystem.config.js --only B-IOS --env production",
+    "start-event-bot-dev": "pm2 start ecosystem.config.js --only B-IOS-event-bot --env development",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
@@ -63,6 +69,7 @@
   },
   "dependencies": {
     "@hokify/agenda": "^6.3.0",
+    "@types/nodemailer": "^6.4.15",
     "axios": "^1.6.8",
     "axios-retry": "^4.3.0",
     "compression": "^1.7.4",
@@ -70,13 +77,14 @@
     "env-var": "^7.4.1",
     "express": "^4.19.2",
     "express-rate-limit": "^7.2.0",
-    "express-status-monitor": "^1.3.4",
+    "express-status-monitor": "^1.2.3",
     "inversify": "^6.0.2",
     "inversify-agenda": "^2.1.1",
     "inversify-binding-decorators": "^4.0.0",
     "moment": "^2.30.1",
     "mongoose": "^8.3.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.13",
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.2.1",
