@@ -23,16 +23,16 @@ npm run dev
 
 > Before, please check the environment variables in the `ecosystem.config.js` to replace with correct envrionment variables.
 
-1. Run `npm run build` to compile and build the source code to ready-for-deployment code.
-2. Copy `./dist` foloder into target deployment folder.
+1. Download source code.
+2. Inside root dir of source code, run `npm run build` to compile and build the source code to ready-for-deployment code.
 3. Run `npm run start-dev` inside the deployment folder to start the project.
 
 ### Production environment deployment
 
 > Before, please check the environment variables in the `ecosystem.config.js` to replace with correct envrionment variables.
 
-1. Run `npm run build` to compile and build the source code to ready-for-deployment code.
-2. Copy `./dist` foloder into target deployment folder.
+1. Download source code.
+2. Inside root dir of source code, run `npm run build` to compile and build the source code to ready-for-deployment code.
 3. Run `npm run start` inside the deployment folder to start the project.
 
 ## API
