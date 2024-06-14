@@ -3,7 +3,7 @@ import Logger from './logger';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { envs } from '../config/env';
 
-const mailTo = (message: string, from: string, to: string, subject: string): void => {
+const mailTo = (message: string, from: string, to: string[], subject: string): void => {
   const transporter: Transporter = nodemailer.createTransport({
     host: envs.SMTP_SERVER_HOST,
     port: envs.SMTP_SERVER_PORT,
@@ -30,7 +30,7 @@ const mailTo = (message: string, from: string, to: string, subject: string): voi
 }
 
 const errorMailTo = (errorMessage: string, subject?: string) => {
-    mailTo(errorMessage, '', '', subject || 'Error Message')
+    mailTo(errorMessage, '', [], subject || 'Error Message')
 }
 
 export { mailTo, errorMailTo };
