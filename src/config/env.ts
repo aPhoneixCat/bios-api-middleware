@@ -9,8 +9,8 @@ export const envs = {
     GALLAGHER_API_URL: get('GALLAGHER_API_URL').required().asString(),
     GALLAGHER_API_KEY: get('GALLAGHER_API_KEY').required().asString(),
     GALLAGHER_DIVISION_URL: get('GALLAGHER_DIVISION_URL').required().asString(),
-    GALLAGHER_ONE_IN_ONE_OUT_AG_URL: get('GALLAGHER_ONE_IN_ONE_OUT_AG_URL').required().asString(),
-    GALLAGHER_UNLIMITED_IN_OUT_AG_URL: get('GALLAGHER_UNLIMITED_IN_OUT_AG_URL').required().asString(),
+    GALLAGHER_VISITOR_AG_URL: get('GALLAGHER_VISITOR_AG_URL').required().asString(),
+    GALLAGHER_STAFF_AG_URL: get('GALLAGHER_STAFF_AG_URL').required().asString(),
     GALLAGHER_QR_CODE_CARD_TYPE_URL: get('GALLAGHER_QR_CODE_CARD_TYPE_URL').required().asString(),
 
     MONGODB_CONNECTION_STR: get('MONGODB_CONNECTION_STR').required().asString(),

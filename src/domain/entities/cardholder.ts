@@ -3,6 +3,7 @@ import moment from "moment";
 import { AccessGroup, Card, CardOperation, GallagherCreateCardholderRequest, GallagherUpdateCardholderRequest } from "../dtos/gallagher/cardholder";
 import { HrefMixin } from "../dtos/utils";
 import { envs } from "../../config/env";
+import { Floor, Room } from "../../config/floors";
 
 // Visitor, vip, staff, shall have different division, access group
 export enum UserType {
@@ -21,8 +22,8 @@ export enum CardState {
 }
 
 const DIVISION: string = envs.GALLAGHER_DIVISION_URL 
-const ONE_IN_ONE_OUT_AG: string = envs.GALLAGHER_ONE_IN_ONE_OUT_AG_URL 
-const UNLIMITED_IN_OUT_AG: string = envs.GALLAGHER_UNLIMITED_IN_OUT_AG_URL 
+const VISITOR_AG: string = envs.GALLAGHER_VISITOR_AG_URL 
+const STAFF_AG: string = envs.GALLAGHER_STAFF_AG_URL 
 const QR_CODE_CARD_TYPE_URL: string = envs.GALLAGHER_QR_CODE_CARD_TYPE_URL
 
 export class UserPermission {
@@ -41,11 +42,17 @@ export class UserPermission {
     }
 
     public getAccessGroup(): AccessGroup {
+        const now = moment()
+        const fromTimeUTC = now.utc().format('YYYY-MM-DDTHH:mm:ssZ')
+        const untilTimeUTC = now.endOf('day').utc().format('YYYY-MM-DDTHH:mm:ssZ')
+
         return {
             accessGroup: {
                 href: this.accessGroupUrl
-            }
-        }
+            },
+            from: fromTimeUTC,
+            until: untilTimeUTC
+        } as AccessGroup
     }
 }
 
@@ -85,7 +92,8 @@ export class CardEntity {
             },
             from: fromTimeUTC,
             until: untilTimeUTC,
-            number: this.cardNumber
+            number: this.cardNumber,
+            trace: true
         }
     }
 
@@ -98,13 +106,15 @@ export class CardholderEntity {
 
     private readonly userType?: UserType
     private readonly userName?: string
+    private readonly floor?: string
     private authorise: boolean;
 
     private readonly cardEntity?: CardEntity
 
-    constructor(userType?: UserType, userName?: string, authorise?: boolean, cardEntity?: CardEntity) {
-        this.userType = userType;
-        this.userName = userName;
+    constructor(userType?: UserType, userName?: string, floor?: string, authorise?: boolean, cardEntity?: CardEntity) {
+        this.userType = userType
+        this.userName = userName
+        this.floor = floor
         this.authorise = authorise || true
         this.cardEntity = cardEntity
     }
@@ -140,13 +150,13 @@ export class CardholderEntity {
     private getUserPermission(): UserPermission {
         switch (this.userType) {
             case UserType.VISITOR:
-                return new UserPermission(DIVISION, ONE_IN_ONE_OUT_AG);
+                return new UserPermission(DIVISION, VISITOR_AG);
             case UserType.STAFF:
-                return new UserPermission(DIVISION, UNLIMITED_IN_OUT_AG);
+                return new UserPermission(DIVISION, STAFF_AG);
             case UserType.VIP:
-                return new UserPermission(DIVISION, UNLIMITED_IN_OUT_AG);
+                return new UserPermission(DIVISION, VISITOR_AG);
             default:
-                return new UserPermission(DIVISION, ONE_IN_ONE_OUT_AG)
+                return new UserPermission(DIVISION, VISITOR_AG)
         }
     }
 

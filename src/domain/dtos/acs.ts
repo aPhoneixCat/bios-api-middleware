@@ -1,5 +1,6 @@
 //TODO
 
+import { Floor } from "../../config/floors"
 import { UserType } from "../entities/cardholder"
 import { CardholderDetail } from "./gallagher/cardholder"
 import { HrefMixin, IdentityMixin } from "./utils"
@@ -10,7 +11,8 @@ export interface CreateCardholderRequest {
     userName: string,
     userType: UserType,
     authorised?: boolean,
-    card2Add?: AddCardToCardholderRequest
+    card2Add?: AddCardToCardholderRequest,
+    floor?: Floor
 }
 
 export interface CreateCardholderResponse {
