@@ -5,7 +5,7 @@ module.exports = {
             script: "dist/app.js",
             env_development: {
                 NODE_ENV: "development",
-                PORT: 3000,
+                PORT: 3005,
                 API_PREFIX: "/api",
                 GALLAGHER_API_URL: 'https://192.168.16.195:8904/',
                 GALLAGHER_API_KEY: '8130-DFCF-B396-34D7-65AA-F98A-ACA4-B4D1',
@@ -21,7 +21,7 @@ module.exports = {
             },
             env_production: {
                 NODE_ENV: "production",
-                PORT: 3000,
+                PORT: 3005,
                 API_PREFIX: "/api",
                 GALLAGHER_API_URL: 'https://tbd:8904/',
                 GALLAGHER_API_KEY: 'XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX',
