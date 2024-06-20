@@ -10,6 +10,7 @@ import { provideSingleton } from '../utils/provideSingleton';
 import { inject } from 'inversify/lib/annotation/inject';
 import { HttpCode } from '../constants';
 import { IResponse, SuccessResponse } from '../domain/dtos/utils';
+import { Floor } from '../config/floors';
 
 @Route('acs')
 @Tags('ACS')
@@ -51,7 +52,8 @@ export class ACSController extends Controller {
 			);
 		}
 
-		const cardholder = new CardholderEntity(reqB.userType, reqB.userName, reqB.authorised, cardEntity || undefined);
+		const cardholder = new CardholderEntity(
+			reqB.userType, reqB.userName, reqB.floor, reqB.authorised, cardEntity || undefined);
 		const createCardholderResponse = await this.acsService.createCardholder(cardholder);
 
 		this.setStatus(HttpCode.CREATED);
