@@ -4,6 +4,7 @@ import { AccessGroup, Card, CardOperation, GallagherCreateCardholderRequest, Gal
 import { HrefMixin } from "../dtos/utils";
 import { envs } from "../../config/env";
 import { Floor, Room } from "../../config/floors";
+import Logger from "../../lib/logger";
 
 // Visitor, vip, staff, shall have different division, access group
 export enum UserType {
@@ -48,9 +49,9 @@ export class UserPermission {
         const untilTimeUTC = expiryAt 
             ? moment.unix(expiryAt).utc().format(timeFormat)
             : now.endOf('day').utc().format(timeFormat)
-
+        Logger.info('untilTimeUTC = ', untilTimeUTC)
         return {
-            accessGroup: {
+            accessGroup: { 
                 href: this.accessGroupUrl
             },
             from: fromTimeUTC,
@@ -127,7 +128,7 @@ export class CardholderEntity {
         this.userName = userName
         this.floor = floor
         this.userExpiryAt = userExpiryAt
-        this.authorise = authorise || true
+        this.authorise = authorise ?? true
         this.cardEntity = cardEntity
     }
 
