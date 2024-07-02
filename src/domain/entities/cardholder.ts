@@ -41,10 +41,13 @@ export class UserPermission {
         }
     }
 
-    public getAccessGroup(): AccessGroup {
+    public getAccessGroup(expiryAt: number | undefined): AccessGroup {
+        const timeFormat = 'YYYY-MM-DDTHH:mm:ssZ'
         const now = moment()
-        const fromTimeUTC = now.utc().format('YYYY-MM-DDTHH:mm:ssZ')
-        const untilTimeUTC = now.endOf('day').utc().format('YYYY-MM-DDTHH:mm:ssZ')
+        const fromTimeUTC = now.utc().format(timeFormat)
+        const untilTimeUTC = expiryAt 
+            ? moment.unix(expiryAt).utc().format(timeFormat)
+            : now.endOf('day').utc().format(timeFormat)
 
         return {
             accessGroup: {
@@ -107,14 +110,23 @@ export class CardholderEntity {
     private readonly userType?: UserType
     private readonly userName?: string
     private readonly floor?: string
+    private readonly userExpiryAt?: number
     private authorise: boolean;
 
     private readonly cardEntity?: CardEntity
 
-    constructor(userType?: UserType, userName?: string, floor?: string, authorise?: boolean, cardEntity?: CardEntity) {
+    constructor(
+        userType?: UserType, 
+        userName?: string, 
+        floor?: string, 
+        userExpiryAt?: number,
+        authorise?: boolean,
+        cardEntity?: CardEntity
+    ) {
         this.userType = userType
         this.userName = userName
         this.floor = floor
+        this.userExpiryAt = userExpiryAt
         this.authorise = authorise || true
         this.cardEntity = cardEntity
     }
@@ -123,7 +135,7 @@ export class CardholderEntity {
         const userPermission: UserPermission = this.getUserPermission()
 
         const division = userPermission.getDivisionHref()
-        const accessGroup = userPermission.getAccessGroup()
+        const accessGroup = userPermission.getAccessGroup(this.userExpiryAt)
 
         return this.cardEntity ? {
             firstName: this.userName,
