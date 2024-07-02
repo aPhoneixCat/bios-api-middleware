@@ -11,7 +11,7 @@ export interface CreateCardholderRequest {
     userName: string,
     userType: UserType,
     authorised?: boolean,
-    userExpiryAt?: number,
+    userExpiryAtInMs?: number,
     card2Add?: AddCardToCardholderRequest,
     floor?: Floor
 }
