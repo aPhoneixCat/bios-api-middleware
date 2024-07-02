@@ -43,7 +43,7 @@ export class ACSController extends Controller {
 	 */
 	@Post('/cardholders')
 	public async createCardholder(@Body() reqB: CreateCardholderRequest): Promise<IResponse> {
-		var cardEntity;
+		let cardEntity;
 		if (reqB.card2Add) {
 			cardEntity = new CardEntity(
 				reqB.card2Add?.cardNumber,
@@ -53,7 +53,12 @@ export class ACSController extends Controller {
 		}
 
 		const cardholder = new CardholderEntity(
-			reqB.userType, reqB.userName, reqB.floor, reqB.authorised, cardEntity || undefined);
+			reqB.userType, 
+			reqB.userName, 
+			reqB.floor, 
+			reqB.userExpiryAt,
+			reqB.authorised, 
+			cardEntity || undefined);
 		const createCardholderResponse = await this.acsService.createCardholder(cardholder);
 
 		this.setStatus(HttpCode.CREATED);
