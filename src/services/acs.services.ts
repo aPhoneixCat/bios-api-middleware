@@ -1,5 +1,5 @@
 import { envs } from "../config/env";
-import { CreateCardholderResponse, GetCardholderResponse, RefreshCardholderCardRequest, RefreshCardholderCardResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
+import { AddNewCardResponse, CreateCardholderResponse, GetCardholderResponse, RefreshCardholderCardRequest, RefreshCardholderCardResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
 import { Card, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
 import { CardEntity, CardholderEntity } from "../domain/entities/cardholder";
 import { AppError } from "../errors/custom.error";
@@ -120,13 +120,25 @@ export default class ACSService {
      * @param card 
      * @returns 
      */
-    public async addCard2Cardholder(cardholerId: string, card: Card): Promise<void> {
+    public async addCard2Cardholder(cardholderId: string, card: Card): Promise<AddNewCardResponse> {
         const addCardReq: GallagherUpdateCardholderRequest = {
             cards: {
                 add: [ card ]
             }
         }
-        await CardholderAPI.update(cardholerId, addCardReq)
+        await CardholderAPI.update(cardholderId, addCardReq)
+
+        const cardholderDetail = await CardholderAPI.get(cardholderId)
+        const cards = cardholderDetail.cards
+        if (!cards) {
+            throw AppError.internalServer('Unexceped error: no card find in cardholder.')
+        }
+
+        const newCardId = this.extractIdFromURL(cards[0].href!);
+
+        return {
+            newCardId: newCardId
+        }
     }
 
     /**
