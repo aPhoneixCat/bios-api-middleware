@@ -28,7 +28,7 @@ const colors = {
 
 const mongoLogOptions: MongoDBConnectionOptions = {
     db: envs.MONGODB_CONNECTION_STR,
-    dbName: 'middleware_log_db',
+    dbName: envs.MONGODB_DATABASE,
     options: { useUnifiedTopology: true},
     collection: 'logs',
     capped: false,

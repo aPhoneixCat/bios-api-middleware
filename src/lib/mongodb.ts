@@ -1,25 +1,24 @@
 import mongoose, { ConnectOptions } from "mongoose";
 import { envs } from "../config/env";
+import Logger from "./logger";
 
 const connect = mongoose.connection;
 mongoose.set('strictQuery', true)
 
 const connectMongoDB = async () => {
-    const url = envs.MONGODB_CONNECTION_STR
-
     connect.on('connected', async () => {
-        console.log('MongoDb Connection Established')
+        Logger.info('MongoDb Connection Established')
     })
     connect.on('reconnected', async () => {
-        console.log('MongoDB Connection Reestablished')
+        Logger.info('MongoDB Connection Reestablished')
     })
     connect.on('disconnected', () => {
-        console.log('MongoDB Connection Disconnected')
-        console.log('Trying to reconnect to Mongo...')
-
+        Logger.info('MongoDB Connection Disconnected')
+        Logger.info('Trying to reconnect to Mongo...')
 
         setTimeout(() => {
-            mongoose.connect(url, {
+            mongoose.connect(envs.MONGODB_CONNECTION_STR, {
+                dbName: envs.MONGODB_DATABASE,
                 useNewurlParser: true,
                 useUnifiedTopology: true,
                 keepAlive: true,
@@ -29,17 +28,17 @@ const connectMongoDB = async () => {
         }, 3000)
     })
     connect.on('close', () => {
-        console.log('Mongo Connection Closed')
+        Logger.info('Mongo Connection Closed')
     });
     connect.on('error', (error) => {
-        console.log('Mongo Connection Error: ' + error)
+        Logger.error('Mongo Connection Error: ' + error)
     })
-    await mongoose.connect(url,
+    await mongoose.connect(envs.MONGODB_CONNECTION_STR,
         {
             useNewurlParser: true,
             useUnifiedTopology: true
         } as ConnectOptions
-    ).catch((error) => console.log(error))
+    ).catch((error) => Logger.error(error))
 }
 
 export { connectMongoDB }

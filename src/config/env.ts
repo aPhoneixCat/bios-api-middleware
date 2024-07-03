@@ -14,6 +14,7 @@ export const envs = {
     GALLAGHER_QR_CODE_CARD_TYPE_URL: get('GALLAGHER_QR_CODE_CARD_TYPE_URL').required().asString(),
 
     MONGODB_CONNECTION_STR: get('MONGODB_CONNECTION_STR').required().asString(),
+    MONGODB_DATABASE: get('MONGODB_DATABASE').required().asString(),
 
     SMTP_SERVER_HOST: get('SMTP_SERVER_HOST').asString(),
     SMTP_SERVER_PORT: get('SMTP_SERVER_PORT').asPortNumber(),
