@@ -13,7 +13,8 @@ module.exports = {
                 GALLAGHER_VISITOR_AG_URL: 'https://192.168.18.39:8904/api/access_groups/611',
                 GALLAGHER_STAFF_AG_URL: 'https://192.168.18.39:8904/api/access_groups/611',
                 GALLAGHER_QR_CODE_CARD_TYPE_URL: 'https://192.168.18.39:8904/api/card_types/601',
-                MONGODB_CONNECTION_STR: 'mongodb://192.168.18.133:27017/',
+                MONGODB_CONNECTION_STR: 'mongodb://bios:bios1234@192.168.18.13:27017',
+                MONGODB_DATABASE: 'bios',
                 SMTP_SERVER_HOST: 'smtp.office365.com',
                 SMTP_SERVER_PORT: 587,
                 SMTP_SERVER_USERNAME: 'tbd',
@@ -29,7 +30,8 @@ module.exports = {
                 GALLAGHER_VISITOR_AG_URL: 'https://tbb:8904/api/access_groups/611',
                 GALLAGHER_STAFF_AG_URL: 'https://tbd:8904/api/access_groups/611',
                 GALLAGHER_QR_CODE_CARD_TYPE_URL: 'https://tbd:8904/api/card_types/601',
-                MONGODB_CONNECTION_STR: 'mongodb://tbd:27017/',
+                MONGODB_CONNECTION_STR: 'mongodb://tbd:27017',
+                MONGODB_DATABASE: 'bios',
                 SMTP_SERVER_HOST: 'smtp.office365.com',
                 SMTP_SERVER_PORT: 587,
                 SMTP_SERVER_USERNAME: 'tbd',
@@ -40,10 +42,12 @@ module.exports = {
             name: "B-IOS-event-bot",
             scrip: "tbd",
             env_development: {
-                NODE_ENV: "development"
+                NODE_ENV: "development",
+                JOB_TYPES: "cardholder-event"
             },
             env_production: {
-                NODE_ENV: "production"
+                NODE_ENV: "production",
+                JOB_TYPES: "cardholder-event"
             }
         }
     ]

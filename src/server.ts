@@ -4,6 +4,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from "swagger-ui-express"
+import morgan from 'morgan';
 import { ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
@@ -11,6 +12,7 @@ import { AppError } from './errors/custom.error'
 import Logger from "./lib/logger";
 import { CorsMiddleware } from './middleware/cors.middleware';
 import { RegisterRoutes } from "./routes";
+import { mailTo } from './lib/mail_server';
 
 // ########################################################################
 // controllers need to be referenced in order to get crawled by the generator
@@ -18,8 +20,6 @@ import { RegisterRoutes } from "./routes";
 import { ACSController } from './controllers/acs.controller';
 import { EventController } from './controllers/events.controller';
 import { WIFIController } from './controllers/wifi.controller';
-import morgan from 'morgan';
-import { mailTo } from './lib/mail_server';
 // ########################################################################
 
 interface ServerOptions {

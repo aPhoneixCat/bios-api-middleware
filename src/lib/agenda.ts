@@ -4,9 +4,8 @@ import { AgendaJob } from '../jobs/agenda-job';
 import Logger from './logger';
 import cardholderEventJob from '../jobs/cardholder-event';
 
-const connectionString = envs.MONGODB_CONNECTION_STR;
-
-const connectionOpts = { db: { address: connectionString + 'agenda', collection: 'agendaJobs' } };
+const connectionString = `${envs.MONGODB_CONNECTION_STR}/${envs.MONGODB_DATABASE}`;
+const connectionOpts = { db: { address: connectionString, collection: 'agendaJobs' } };
 
 const agenda = new Agenda(connectionOpts);
 // listen for the ready or error event.
@@ -35,6 +34,8 @@ if (jobTypes.length) {
             await job.runEvery(agenda);
         });
     }
+} else {
+    Logger.warning('No job types specified, please run JOB_TYPES')
 }
 
 export default agenda;

@@ -56,7 +56,7 @@ export class ACSController extends Controller {
 			reqB.userType, 
 			reqB.userName, 
 			reqB.floor, 
-			reqB.userExpiryAt,
+			reqB.userExpiryAtInMs,
 			reqB.authorised, 
 			cardEntity || undefined);
 		const createCardholderResponse = await this.acsService.createCardholder(cardholder);
