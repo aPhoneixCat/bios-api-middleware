@@ -118,7 +118,7 @@ export class ACSController extends Controller {
 		@Path() cardholderId: string,
 		@Body() reqB: AddCardToCardholderRequest
 	): Promise<IResponse> {
-		const cardInfo = new CardEntity(reqB.cardNumber, reqB.validityPeriodInMs, reqB.fromInMs);
+		const cardInfo = new CardEntity(reqB.cardNumber, reqB.fromInMs, reqB.validityPeriodInMs);
 		const addNewAddRes = await this.acsService.addCard2Cardholder(cardholderId, cardInfo.getCard());
 
 		return SuccessResponse('Successfully add card to cardholder', addNewAddRes);
