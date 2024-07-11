@@ -142,6 +142,7 @@ export class CardholderEntity {
             firstName: this.userName,
             lastName: this.userName,
             shortName: this.userName,
+            description: this.userType ?? '',
             authorised: this.authorise,
             division: division,
             cards: [ this.cardEntity.getCard() ],
@@ -150,6 +151,7 @@ export class CardholderEntity {
             firstName: this.userName,
             lastName: this.userName,
             shortName: this.userName,
+            description: this.userType ?? '',
             authorised: this.authorise,
             division: division,
             accessGroups: [accessGroup]
