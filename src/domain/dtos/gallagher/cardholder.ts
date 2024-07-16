@@ -108,15 +108,16 @@ export interface Notifications {
 }
 
 export interface Competency {
-  href: string;
-  competency: CompetencyRef;
-  status: Status;
-  expiryWarning: string;
-  expiry: string;
-  enablement: string;
-  comment: string;
-  limitedCredit: boolean;
-  credit: number;
+  href?: string;
+  competency?: CompetencyRef;
+  enabled?: boolean
+  status?: Status;
+  expiryWarning?: string;
+  expiry?: string;
+  enablement?: string;
+  comment?: string;
+  limitedCredit?: boolean;
+  credit?: number;
 }
 
 export interface OperatorGroup {

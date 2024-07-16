@@ -115,7 +115,7 @@ export interface OperatorGroupRef extends HrefMixin {
 }
 
 export interface CompetencyRef extends HrefMixin {
-    name: string
+    name?: string
 }
 
 export interface RoleRef extends HrefMixin {
