@@ -190,7 +190,7 @@ export interface GallagherUpdateCardholderRequest {
   "@email"?: string,
   "@phone"?: string,
   cards?: CardOperation,
-  competencies?: Competency[]
+  competencies?: CompetencyOperation
 }
 
 export interface CardOperation {
@@ -205,7 +205,11 @@ export interface AccessGroupOperation {
   remove?: AccessGroup[]
 }
 
-
+export interface CompetencyOperation {
+  add?: Competency[],
+  update?: Competency[],
+  remove?: Competency[]
+}
 
 // ======================= Response =========================
 export type GallagherCreateCardholderResponse = HrefMixin & {
