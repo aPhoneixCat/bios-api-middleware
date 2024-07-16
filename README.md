@@ -6,14 +6,36 @@ A building's inter-operational system, a.k.a, api middleware/gateway providing i
 
 ## Installation
 
-> NodeJS 20 is required.
+### Prequisition
 
-```
-$ npm install
-$ npm run dev
+1. Install NVM for node.js version management :https://github.com/coreybutler/nvm-windows
+2. Run `nvm use`, it will automatically install and use the node version specified in `.nvmrc` file
+3. Install `pm2`: `npm install pm2 -g`
+
+### Local setup
+
+```sh
+npm install
+npm run dev
 ```
 
-## API 
+### Development environment deployment
+
+> Before, please check the environment variables in the `ecosystem.config.js` to replace with correct envrionment variables.
+
+1. Download source code.
+2. Inside root dir of source code, run `npm run build` to compile and build the source code to ready-for-deployment code.
+3. Run `npm run start-dev` inside the deployment folder to start the project.
+
+### Production environment deployment
+
+> Before, please check the environment variables in the `ecosystem.config.js` to replace with correct envrionment variables.
+
+1. Download source code.
+2. Inside root dir of source code, run `npm run build` to compile and build the source code to ready-for-deployment code.
+3. Run `npm run start` inside the deployment folder to start the project.
+
+## API
 
 Full API documentation: http://localhost:3000/api-docs/#/
 

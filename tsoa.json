@@ -6,5 +6,11 @@
 		"basePath": "/api",
 		"outputDirectory": "public",
 		"specVersion": 3
+	},
+	"routes": {
+		"routesDir": "./src",
+		"basePath": "/api",
+		"middleware": "express",
+		"iocModule": "./src/ioc"
 	}
 }

@@ -41,4 +41,9 @@ export class AppError extends Error {
     static internalServer(message: string): AppError {
         return new AppError({ message, statusCode: HttpCode.INTERNAL_SERVER_ERROR });
     }
+
+    static internalServerWrap(error: Error): AppError {
+        const message = error.message
+        return new AppError({ message, statusCode: HttpCode.INTERNAL_SERVER_ERROR });
+    }
 }

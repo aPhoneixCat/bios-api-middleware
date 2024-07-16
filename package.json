@@ -1,22 +1,33 @@
 {
   "name": "bios-api-middleware",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20.14.0"
+  },
   "description": "A building's inter-operational system, a.k.a, api middleware/gateway providing interfaces to help external integration with building's intranet systems.",
   "main": "dist/app.js",
   "scripts": {
     "predev": "npm run swagger",
     "prebuild": "npm run swagger",
-    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/app.js",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "event-bot-dev": "nodemon -x JOB_TYPES=cardholder-event ts-node src/jobs/worker.ts ",
+    "build": "rimraf ./dist && tsoa spec-and-routes && tsc",
+    "start": "npm run build && pm2 start ecosystem.config.js --only B-IOS --env production",
+    "start-dev": "npm run build && pm2 start ecosystem.config.js --only B-IOS --env development",
+    "start-event-bot": "npm run build && pm2 start ecosystem.config.js --only B-IOS-event-bot --env production",
+    "start-event-bot-dev": "npm run build && pm2 start ecosystem.config.js --only B-IOS-event-bot --env development",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
-    "swagger": "tsoa spec"
+    "swagger": "tsoa spec",
+    "routes": "tsoa routes"
   },
   "nodemonConfig": {
     "watch": [
       "src"
+    ],
+    "ignore": [
+      "./src/routes.ts"
     ],
     "ext": "ts",
     "exec": "ts-node src/app.ts"
@@ -36,7 +47,8 @@
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.14.2",
+    "@types/reflect-metadata": "^0.1.0",
     "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "concurrently": "^8.2.2",
@@ -58,19 +70,27 @@
   },
   "dependencies": {
     "@hokify/agenda": "^6.3.0",
+    "@types/nodemailer": "^6.4.15",
     "axios": "^1.6.8",
+    "axios-retry": "^4.3.0",
     "compression": "^1.7.4",
     "dotenv": "^16.4.5",
     "env-var": "^7.4.1",
     "express": "^4.19.2",
     "express-rate-limit": "^7.2.0",
+    "express-status-monitor": "^1.2.3",
     "inversify": "^6.0.2",
     "inversify-agenda": "^2.1.1",
+    "inversify-binding-decorators": "^4.0.0",
+    "moment": "^2.30.1",
     "mongoose": "^8.3.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.13",
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.2.1",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "winston-mongodb": "^5.1.1"
   }
 }
