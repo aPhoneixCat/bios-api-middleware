@@ -12,6 +12,7 @@ export const envs = {
     GALLAGHER_VISITOR_AG_URL: get('GALLAGHER_VISITOR_AG_URL').required().asString(),
     GALLAGHER_STAFF_AG_URL: get('GALLAGHER_STAFF_AG_URL').required().asString(),
     GALLAGHER_QR_CODE_CARD_TYPE_URL: get('GALLAGHER_QR_CODE_CARD_TYPE_URL').required().asString(),
+    GALLAGHER_VISITOR_COMPETENCY: get('GALLAGHER_VISITOR_COMPETENCY').required().asString(),
 
     MONGODB_CONNECTION_STR: get('MONGODB_CONNECTION_STR').required().asString(),
     MONGODB_DATABASE: get('MONGODB_DATABASE').required().asString(),

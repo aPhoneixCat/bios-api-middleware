@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { AccessGroup, Card, CardOperation, GallagherCreateCardholderRequest, GallagherUpdateCardholderRequest } from "../dtos/gallagher/cardholder";
+import { AccessGroup, Card, CardOperation, Competency, GallagherCreateCardholderRequest, GallagherUpdateCardholderRequest } from "../dtos/gallagher/cardholder";
 import { HrefMixin } from "../dtos/utils";
 import { envs } from "../../config/env";
 import { Floor, Room } from "../../config/floors";
@@ -134,6 +134,7 @@ export class CardholderEntity {
 
     public toCreateCardholderRequest(): GallagherCreateCardholderRequest {
         const userPermission: UserPermission = this.getUserPermission()
+        const competency: Competency | undefined = this.getCompetency()
 
         const division = userPermission.getDivisionHref()
         const accessGroup = userPermission.getAccessGroup(this.userExpiryAtInMs)
@@ -146,7 +147,8 @@ export class CardholderEntity {
             authorised: this.authorise,
             division: division,
             cards: [ this.cardEntity.getCard() ],
-            accessGroups: [accessGroup]
+            accessGroups: [accessGroup],
+            competencies: competency ? [ competency ] : undefined
         } : {
             firstName: this.userName,
             lastName: this.userName,
@@ -154,7 +156,8 @@ export class CardholderEntity {
             description: this.userType ?? '',
             authorised: this.authorise,
             division: division,
-            accessGroups: [accessGroup]
+            accessGroups: [accessGroup],
+            competencies: competency ? [ competency ] : undefined
         }
     }
 
@@ -172,6 +175,17 @@ export class CardholderEntity {
                 return new UserPermission(DIVISION, VISITOR_AG);
             default:
                 return new UserPermission(DIVISION, VISITOR_AG)
+        }
+    }
+
+    private getCompetency(): Competency | undefined {
+        if (this.userType == UserType.VISITOR) {
+            return {
+                competency: {
+                    href: envs.GALLAGHER_VISITOR_COMPETENCY
+                },
+                enabled: true
+            }
         }
     }
 

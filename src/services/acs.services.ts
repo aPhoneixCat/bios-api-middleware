@@ -75,10 +75,17 @@ export default class ACSService {
             throw AppError.internalServer('Unexceped error: no card find in cardholder.')
         }
 
+        const newCard = cards.find(x => x.number === cardEntity.getCard().number)
+        if (!newCard) {
+            throw AppError.internalServer(
+                `Unexpected error: cannot find new card after refreshing, cardholder=${cardholderId}, existingCardNumber=${cardEntity.getCard().number}`
+            )
+        }
+
         return  {
             cardholderId: cardholderId,
             newCard: {
-                cardId: this.extractIdFromURL(cards[0].href!),
+                cardId: this.extractIdFromURL(newCard.href!),
                 expiredAt: cardEntity.expiredAtInMs()
             }
         } as RefreshCardholderCardResponse
@@ -134,7 +141,14 @@ export default class ACSService {
             throw AppError.internalServer('Unexceped error: no card find in cardholder.')
         }
 
-        const newCardId = this.extractIdFromURL(cards[0].href!);
+        const newCard = cards.find(x => x.number === card.number)
+        if (!newCard) {
+            throw AppError.internalServer(
+                `Unexpected error: cannot find new card after adding, cardholder=${cardholderId}, existingCardNumber=${card.number}`
+            )
+        }
+
+        const newCardId = this.extractIdFromURL(newCard.href!);
 
         return {
             newCardId: newCardId
