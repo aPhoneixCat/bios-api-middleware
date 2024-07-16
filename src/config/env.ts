@@ -15,6 +15,7 @@ export const envs = {
     GALLAGHER_VISITOR_COMPETENCY: get('GALLAGHER_VISITOR_COMPETENCY').required().asString(),
 
     MONGODB_CONNECTION_STR: get('MONGODB_CONNECTION_STR').required().asString(),
+    MONGODB_CONNECTION_STR_DR: get('MONGODB_CONNECTION_STR_DR').required().asString(),
     MONGODB_DATABASE: get('MONGODB_DATABASE').required().asString(),
 
     SMTP_SERVER_HOST: get('SMTP_SERVER_HOST').asString(),
