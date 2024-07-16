@@ -53,6 +53,7 @@ module.exports = {
                 GALLAGHER_QR_CODE_CARD_TYPE_URL: 'https://10.201.2.100:8904/api/card_types/599',
                 GALLAGHER_VISITOR_COMPETENCY: 'https://10.201.2.100:8904/api/competencies/2379',
                 MONGODB_CONNECTION_STR: 'mongodb://192.168.131.65:27017',
+                MONGODB_CONNECTION_STR_DR: 'mongodb://192.168.41.65:27017',
                 MONGODB_DATABASE: 'bios',
                 SMTP_SERVER_HOST: 'smtp.office365.com',
                 SMTP_SERVER_PORT: 587,

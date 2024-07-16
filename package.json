@@ -13,6 +13,7 @@
     "event-bot-dev": "nodemon -x JOB_TYPES=cardholder-event ts-node src/jobs/worker.ts ",
     "build": "rimraf ./dist && tsoa spec-and-routes && tsc",
     "start": "npm run build && pm2 start ecosystem.config.js --only B-IOS --env production",
+    "start-dr": "npm run build && pm2 start ecosystem.config.js --only B-IOS --env dr",
     "start-dev": "npm run build && pm2 start ecosystem.config.js --only B-IOS --env development",
     "start-event-bot": "npm run build && pm2 start ecosystem.config.js --only B-IOS-event-bot --env production",
     "start-event-bot-dev": "npm run build && pm2 start ecosystem.config.js --only B-IOS-event-bot --env development",
