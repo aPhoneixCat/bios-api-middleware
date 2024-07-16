@@ -189,7 +189,8 @@ export interface GallagherUpdateCardholderRequest {
   authorised?: boolean,
   "@email"?: string,
   "@phone"?: string,
-  cards?: CardOperation
+  cards?: CardOperation,
+  competencies?: Competency[]
 }
 
 export interface CardOperation {

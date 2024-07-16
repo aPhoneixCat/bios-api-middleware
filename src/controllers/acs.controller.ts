@@ -5,7 +5,7 @@ import {
 	RefreshCardholderCardRequest
 } from '../domain/dtos/acs';
 import ACSService from '../services/acs.services';
-import { CardEntity, CardholderEntity } from '../domain/entities/cardholder';
+import { CardEntity, CardholderEntity, UserType } from '../domain/entities/cardholder';
 import { provideSingleton } from '../utils/provideSingleton';
 import { inject } from 'inversify/lib/annotation/inject';
 import { HttpCode } from '../constants';
@@ -101,9 +101,13 @@ export class ACSController extends Controller {
 	 * @returns
 	 */
 	@Get('/cardholders/{cardholderId}/activate')
-	public async activateCardholder(@Path() cardholderId: string, @Query() authorised: boolean): Promise<IResponse> {
-		await this.acsService.authoriseCardholder(cardholderId, authorised);
-		return SuccessResponse(`Successfully ${authorised ? 'activate' : 'deactivate'} cardholder`);
+	public async activateCardholder(
+		@Path() cardholderId: string, 
+		@Query() authorised: boolean,
+		@Query() userType: UserType
+	): Promise<IResponse> {
+		await this.acsService.authoriseCardholder(cardholderId, authorised, userType);
+		return SuccessResponse(`Successfully ${authorised ? 'activate' : 'deactivate'} cardholder [${cardholderId}]`);
 	}
 
 	/**
