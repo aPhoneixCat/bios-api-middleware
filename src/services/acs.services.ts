@@ -1,7 +1,7 @@
 import { envs } from "../config/env";
 import { AddNewCardResponse, CreateCardholderResponse, GetCardholderResponse, RefreshCardholderCardRequest, RefreshCardholderCardResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
-import { Card, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
-import { CardEntity, CardholderEntity } from "../domain/entities/cardholder";
+import { Card, Competency, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
+import { CardEntity, CardholderEntity, UserType } from "../domain/entities/cardholder";
 import { AppError } from "../errors/custom.error";
 import CardholderAPI from "../lib/gallagher-api/cardholders.api";
 import Logger from "../lib/logger";
@@ -112,9 +112,18 @@ export default class ACSService {
      * @param authorised true - authorised, false - not authorised.
      * @returns
      */
-    public async authoriseCardholder(cardholderId: string, authorised: boolean): Promise<void> {
+    public async authoriseCardholder(cardholderId: string, authorised: boolean, userType: UserType): Promise<void> {
+        // if visitor, will also enable the competency
+        const competency = authorised && userType == UserType.VISITOR ? {
+            competency: {
+                href: envs.GALLAGHER_VISITOR_COMPETENCY
+            },
+            enabled: true
+        } as Competency : undefined
+
         const updateRequest: GallagherUpdateCardholderRequest = {
-            authorised: authorised
+            authorised: authorised,
+            competencies: competency ? [ competency ] : undefined
         }
         
         await CardholderAPI.update(cardholderId, updateRequest) 
