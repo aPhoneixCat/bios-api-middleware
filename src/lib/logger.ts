@@ -38,6 +38,11 @@ const mongoLogOptions: MongoDBConnectionOptions = {
     metaKey: 'additionInfo'
 }
 
+const dr_mongoLogOptions: MongoDBConnectionOptions = {
+    ...mongoLogOptions,
+    db: envs.MONGODB_CONNECTION_STR_DR,
+}
+
 winston.addColors(colors)
 
 const format = winston.format.combine(
@@ -69,7 +74,8 @@ const transports = [
     new winston.transports.Console(),
     errorFilleTransport,
     allFileTransport,
-    new winston.transports.MongoDB(mongoLogOptions)
+    new winston.transports.MongoDB(mongoLogOptions),
+    new winston.transports.MongoDB(dr_mongoLogOptions)
 ]
 
 const Logger = winston.createLogger({
