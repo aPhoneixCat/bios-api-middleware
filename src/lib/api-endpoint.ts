@@ -2,7 +2,6 @@ import axios, { AxiosError } from "axios";
 import { AxiosInstance } from "axios";
 import axiosRetry from "axios-retry"
 import https from "https"
-import { envs } from "../config/env";
 import Logger from "./logger";
 import { HttpCode } from "../constants";
 
@@ -29,10 +28,10 @@ export abstract class IAPIEndpoint {
     protected endpointConfig: EndpointConfig
     protected axiosClient: AxiosInstance
 
-    constructor() {
+    constructor(baseURL: string | undefined) {
         this.endpointConfig = this.getConfig()
         this.axiosClient = axios.create({
-            baseURL: envs.GALLAGHER_API_URL,
+            baseURL: baseURL,
             timeout: this.endpointConfig.timeoutInMs || 2000,
             httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
