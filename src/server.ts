@@ -13,8 +13,6 @@ import Logger from "./lib/logger";
 import { CorsMiddleware } from './middleware/cors.middleware';
 import { RegisterRoutes } from "./routes";
 import { mailTo } from './lib/mail_server';
-import https from 'https'
-import fs from 'fs'
 
 // ########################################################################
 // controllers need to be referenced in order to get crawled by the generator
@@ -32,7 +30,6 @@ interface ServerOptions {
 export class Server {
     private readonly app = express();
     private serverListener?: ServerHttp<typeof IncomingMessage, typeof ServerResponse>;
-    private httpsServerListener?: ServerHttp<typeof IncomingMessage, typeof ServerResponse>;
     private readonly port: number;
 
     constructor(options: ServerOptions) {
@@ -74,18 +71,7 @@ export class Server {
         // Handle errors middleware for the routes
         this.app.use(ErrorMiddleware.handleError);
 
-        // Create HTTP server
         this.serverListener = this.app.listen(this.port, () => {
-            Logger.info(`✓ Server running; Check status on http://localhost:${this.port}/status`);
-            Logger.info(`✓ Started Swagger UI at http://localhost:${this.port}/api-docs`)
-        });
-
-        // Create HTTPS server
-        this.httpsServerListener = https.createServer({
-            key: fs.readFileSync('./server.key'),
-            cert: fs.readFileSync('./server.crt')
-        }, this.app);
-        this.httpsServerListener.listen(443, () => {
             Logger.info(`✓ Server running; Check status on http://localhost:${this.port}/status`);
             Logger.info(`✓ Started Swagger UI at http://localhost:${this.port}/api-docs`)
         });
@@ -100,9 +86,6 @@ export class Server {
     close(): void {
         this.serverListener?.close(() => {
             Logger.debug('HTTP server closed')
-        });
-        this.httpsServerListener?.close(() => {
-            Logger.debug('HTTPS server closed')
         });
     }
 }
