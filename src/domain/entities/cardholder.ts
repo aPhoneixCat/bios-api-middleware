@@ -23,7 +23,8 @@ export enum CardState {
 }
 
 const DIVISION: string = envs.GALLAGHER_DIVISION_URL 
-const VISITOR_AG: string = envs.GALLAGHER_VISITOR_AG_URL 
+const VISITOR_AG: string = envs.GALLAGHER_VISITOR_AG_URL
+const VIP_AG: string = envs.GALLAGHER_VIP_AG_URL 
 const STAFF_AG: string = envs.GALLAGHER_STAFF_AG_URL 
 const QR_CODE_CARD_TYPE_URL: string = envs.GALLAGHER_QR_CODE_CARD_TYPE_URL
 
@@ -172,7 +173,7 @@ export class CardholderEntity {
             case UserType.STAFF:
                 return new UserPermission(DIVISION, STAFF_AG);
             case UserType.VIP:
-                return new UserPermission(DIVISION, STAFF_AG);
+                return new UserPermission(DIVISION, VIP_AG);
             default:
                 return new UserPermission(DIVISION, VISITOR_AG)
         }

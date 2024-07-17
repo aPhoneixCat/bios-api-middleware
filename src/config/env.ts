@@ -10,6 +10,7 @@ export const envs = {
     GALLAGHER_API_KEY: get('GALLAGHER_API_KEY').required().asString(),
     GALLAGHER_DIVISION_URL: get('GALLAGHER_DIVISION_URL').required().asString(),
     GALLAGHER_VISITOR_AG_URL: get('GALLAGHER_VISITOR_AG_URL').required().asString(),
+    GALLAGHER_VIP_AG_URL: get('GALLAGHER_VIP_AG_URL').required().asString(),
     GALLAGHER_STAFF_AG_URL: get('GALLAGHER_STAFF_AG_URL').required().asString(),
     GALLAGHER_QR_CODE_CARD_TYPE_URL: get('GALLAGHER_QR_CODE_CARD_TYPE_URL').required().asString(),
     GALLAGHER_VISITOR_COMPETENCY: get('GALLAGHER_VISITOR_COMPETENCY').required().asString(),
