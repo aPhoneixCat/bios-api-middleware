@@ -172,7 +172,7 @@ export class CardholderEntity {
             case UserType.STAFF:
                 return new UserPermission(DIVISION, STAFF_AG);
             case UserType.VIP:
-                return new UserPermission(DIVISION, VISITOR_AG);
+                return new UserPermission(DIVISION, STAFF_AG);
             default:
                 return new UserPermission(DIVISION, VISITOR_AG)
         }
