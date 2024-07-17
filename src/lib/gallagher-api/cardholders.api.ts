@@ -5,6 +5,7 @@ import Logger from "../logger"
 import { GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
 import { AppError } from "../../errors/custom.error"
 import { getAPIKey } from "./utils"
+import { envs } from "../../config/env"
 
 interface GallagherErrorMsgRes {
     message: string
@@ -201,5 +202,5 @@ export class Cardhodlers extends IAPIEndpoint {
     }
 }
 
-const CardholderAPI = new Cardhodlers()
+const CardholderAPI = new Cardhodlers(envs.GALLAGHER_API_URL)
 export default CardholderAPI

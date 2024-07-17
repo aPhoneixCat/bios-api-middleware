@@ -14,6 +14,10 @@ export const envs = {
     GALLAGHER_QR_CODE_CARD_TYPE_URL: get('GALLAGHER_QR_CODE_CARD_TYPE_URL').required().asString(),
     GALLAGHER_VISITOR_COMPETENCY: get('GALLAGHER_VISITOR_COMPETENCY').required().asString(),
 
+    RUCKUS_API_URL: get('RUCKUS_API_URL').required().asString(),
+    RUCKUS_USERNAME: get('RUCKUS_USERNAME').required().asString(),
+    RUCKUS_PASSWORD: get('RUCKUS_PASSWORD').required().asString(),
+
     MONGODB_CONNECTION_STR: get('MONGODB_CONNECTION_STR').required().asString(),
     MONGODB_CONNECTION_STR_DR: get('MONGODB_CONNECTION_STR_DR').required().asString(),
     MONGODB_DATABASE: get('MONGODB_DATABASE').required().asString(),
