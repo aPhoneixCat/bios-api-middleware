@@ -121,7 +121,7 @@ export default class ACSService {
         if (!cardholderCompetency) {
             Logger.warn(`Cannot find cardholderCompetency link for ${cardholderId} and ${envs.GALLAGHER_VISITOR_COMPETENCY}`)
         }
-        const updateCompetencyOperation = cardholderCompetency && authorised && userType == UserType.VISITOR ? {
+        const updateCompetencyOperation = authorised && userType == UserType.VISITOR ? {
             update: [
                 {
                     href: cardholderCompetency?.href,
