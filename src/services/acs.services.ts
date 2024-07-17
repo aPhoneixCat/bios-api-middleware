@@ -113,11 +113,18 @@ export default class ACSService {
      * @returns
      */
     public async authoriseCardholder(cardholderId: string, authorised: boolean, userType: UserType): Promise<void> {
+        const cardholderDetail = await CardholderAPI.get(cardholderId)
+        const cardholderCompetency = cardholderDetail.competencies?.find(
+            x => x.competency?.href === envs.GALLAGHER_VISITOR_COMPETENCY
+        )
         // if visitor, will also enable the competency
-        const updateCompetencyOperation = authorised && userType == UserType.VISITOR ? {
+        if (!cardholderCompetency) {
+            Logger.warn(`Cannot find cardholderCompetency link for ${cardholderId} and ${envs.GALLAGHER_VISITOR_COMPETENCY}`)
+        }
+        const updateCompetencyOperation = cardholderCompetency && authorised && userType == UserType.VISITOR ? {
             update: [
                 {
-                    href: envs.GALLAGHER_VISITOR_COMPETENCY,
+                    href: cardholderCompetency?.href,
                     enabled: true
                 }
             ]
