@@ -141,10 +141,10 @@ export class CardholderEntity {
         const accessGroup = userPermission.getAccessGroup(this.userExpiryAtInMs)
 
         return this.cardEntity ? {
-            firstName: this.userName,
-            lastName: this.userName,
-            shortName: this.userName,
-            description: this.userType ?? '',
+            firstName: this.userName?.substring(0, 50), // first name is only allowed 50 characters
+            lastName: this.userName?.substring(0, 50), // // last name is only allowed 50 characters
+            shortName: this.userName?.substring(0, 16), // short name is only allowed 16 characters
+            description: this.userType ?? '', // description only allow 200 characters
             authorised: this.authorise,
             division: division,
             cards: [ this.cardEntity.getCard() ],
