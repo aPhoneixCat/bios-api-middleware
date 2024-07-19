@@ -1,8 +1,9 @@
 import { IAPIEndpoint, EndpointConfig } from "../api-endpoint"
 import { envs } from "../../config/env"
-import { GuestPassGenerateRequest, GuestPassGenerateResponse, GuestPassListParameters, GuestPassListResponse } from "../../domain/dtos/ruckus/guestpass"
-import { AxiosError } from "axios"
+import { RuckusGuestPassGenerateRequest, RuckusGuestPassGenerateResponse, RuckusGuestPassListParameters, RuckusGuestPassListResponse } from "../../domain/dtos/ruckus/guestpass"
+import axios, { AxiosError } from "axios"
 import RuckusLoginAPI from "./ruckus-login.api"
+import { AppError } from "../../errors/custom.error"
 
 interface RuckusErrorMsgRes {
     message: string
@@ -23,26 +24,37 @@ export class RuckusGuestPass extends IAPIEndpoint {
         if (!this.serviceTicket) {
             const res = await RuckusLoginAPI.login()
             this.serviceTicket = res.serviceTicket
-        } 
+        }
 
         return this.serviceTicket
     }
 
-    async generateGuestPass(serviceTicket: string): Promise<GuestPassGenerateResponse> {
+    async generateGuestPass(): Promise<RuckusGuestPassGenerateResponse> {
         const url = `${this.endpointConfig.endpoint}/generate?serviceTicket=${this.getServiceTicket()}`
-        const request: GuestPassGenerateRequest | undefined = undefined
-        this.axiosClient.post(url, request, {
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
+        const request: RuckusGuestPassGenerateRequest | undefined = undefined
+
+        try {
+            const { data } =  await this.axiosClient.post(url, request, {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                }
+            })
+
+            return data
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                throw AppError.internalServer(this.buildErrorMessage(error))
             }
-        })
+            throw AppError.internalServerWrap(error)
+        }
+        
 
         // todo if serviceTicket is expired, need to re-generate
 
         return {}
     }
 
-    async listGuestPass(parameters: GuestPassListParameters): Promise<GuestPassListResponse> {
+    async listGuestPass(parameters: RuckusGuestPassListParameters): Promise<RuckusGuestPassListResponse> {
         const url = `${this.endpointConfig.endpoint}?serviceTicket=${this.getServiceTicket()}`
         this.axiosClient.get(url, {
             params: parameters,

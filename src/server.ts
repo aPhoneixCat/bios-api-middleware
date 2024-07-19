@@ -4,7 +4,6 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from "swagger-ui-express"
-import morgan from 'morgan';
 import { ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
@@ -19,7 +18,7 @@ import { mailTo } from './lib/mail_server';
 // when adding new controller, add the import here so that it can be indexed.
 import { ACSController } from './controllers/acs.controller';
 import { EventController } from './controllers/events.controller';
-import { WIFIController } from './controllers/wifi.controller';
+import { RuckusController } from './controllers/ruckus.controller';
 // ########################################################################
 
 interface ServerOptions {
