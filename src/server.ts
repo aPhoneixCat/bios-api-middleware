@@ -7,6 +7,7 @@ import swaggerUi from "swagger-ui-express"
 import { ONE_HUNDRED, ONE_THOUSAND, SIXTY } from './constants';
 import { ErrorMiddleware } from './middleware/error.middleware'
 import morganMiddleware from './middleware/morgan.middlreware';
+import { TraceMiddleware } from './middleware/trace.middleware';
 import { AppError } from './errors/custom.error'
 import Logger from "./lib/logger";
 import { CorsMiddleware } from './middleware/cors.middleware';
@@ -51,6 +52,7 @@ export class Server {
             message: 'Too many requests from this IP, please try again in one hour'
         }));
         this.app.use(require('express-status-monitor')());
+        this.app.use(TraceMiddleware.handleTrace)
 
         // Swagger API
         this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(undefined, {

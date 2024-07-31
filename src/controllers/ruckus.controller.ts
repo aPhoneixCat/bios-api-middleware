@@ -27,7 +27,7 @@ export class RuckusController extends Controller {
 	public async generateGuestPass(@Body() reqB: GenerateGuestPassRequest): Promise<IResponse> {
 		const res = await this.ruckusService.generateGuestPass();
 
-		return SuccessResponse('successfully generate guest pass', undefined);
+		return SuccessResponse('successfully generate guest pass', res);
 	}
 
 }

@@ -35,6 +35,7 @@ export interface CardholderDetail {
   division?: HrefMixin;
   '@email'?: string;
   '@phone'?: string;
+  '@Description'?: string;
   personalDataDefinitions?: PersonalDataDefinition[];
   cards?: Card[];
   accessGroups?: AccessGroup[];
@@ -166,8 +167,8 @@ export interface Status {
 }
 
 export interface PersonalDataDefinition {
-  '@email'?: Pdf;
-  '@phone'?: Pdf;
+  '@email'?: Pdf
+  '@phone'?: Pdf
 }
 
 export interface Pdf {

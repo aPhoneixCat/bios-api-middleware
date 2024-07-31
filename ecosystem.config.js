@@ -75,7 +75,7 @@ module.exports = {
         },
         {
             name: "B-IOS-event-bot",
-            scrip: "tbd",
+            scrip: "./dist/jobs/worker.js",
             env_development: {
                 NODE_ENV: "development",
                 JOB_TYPES: "cardholder-event"

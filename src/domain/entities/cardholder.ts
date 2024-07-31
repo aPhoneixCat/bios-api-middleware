@@ -146,6 +146,7 @@ export class CardholderEntity {
             shortName: this.userName?.substring(0, 16), // short name is only allowed 16 characters
             description: this.userType ?? '', // description only allow 200 characters
             authorised: this.authorise,
+            '@Description': this.userType ?? '', // set userType as cardholder description
             division: division,
             cards: [ this.cardEntity.getCard() ],
             accessGroups: [accessGroup],
@@ -156,6 +157,7 @@ export class CardholderEntity {
             shortName: this.userName,
             description: this.userType ?? '',
             authorised: this.authorise,
+            '@Description': this.userType ?? '', // set userType as cardholder description
             division: division,
             accessGroups: [accessGroup],
             competencies: competency ? [ competency ] : undefined
