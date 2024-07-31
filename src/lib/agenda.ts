@@ -15,21 +15,21 @@ agenda
 	.on('success', () => console.log('Agenda job success!'))
 	.on('fail', () => console.log('Agenda job fail!'));
 
-const jobTypes: string[] = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
-const jobs: AgendaJob[] = [];
-jobTypes.forEach(async (type) => {
-	// Logger.info(`Define job [${type}]`);
-    // const { default: agendaJob } = await import(`../jobs/${type}`)
-    // Logger.info(`agendaJob = ${agendaJob}`)
-    const agendaJob = cardholderEventJob
-	cardholderEventJob.define(agenda);
-	jobs.push(agendaJob);
+// Jobs to run
+const jobTypes: AgendaJob[] = [
+    cardholderEventJob
+];
+
+const runningJobs: AgendaJob[] = [];
+jobTypes.forEach(async (job) => {
+	job.define(agenda);
+	runningJobs.push(job);
 });
 
 if (jobTypes.length) {
     agenda.start(); // Returns a promise, which should be handled appropriately
-    if (jobs) {
-        jobs.forEach(async (job) => {
+    if (runningJobs) {
+        runningJobs.forEach(async (job) => {
             Logger.info(`Runnning job [${job.getName()}] at schedule [${job.getSchedule()}]`);
             await job.runEvery(agenda);
         });
