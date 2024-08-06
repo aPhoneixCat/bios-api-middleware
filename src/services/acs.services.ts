@@ -11,11 +11,11 @@ import { provideSingleton } from "../utils/provideSingleton";
 export default class ACSService {
   
     /**
-     * get cardholder by staff id
+     * link cardholder by staff id
      * 
      * @returns 
      */
-    public async getCardholderByStaffId(staffId: string, cardInfo: CardEntity | undefined): Promise<LinkStaffCardholderResponse> {
+    public async linkCardholderByStaffId(staffId: string, cardInfo: CardEntity | undefined): Promise<LinkStaffCardholderResponse> {
         const cardholders =  await CardholderAPI.searchCardholderByStaffId(staffId)
         if (!cardholders?.results) {
             throw AppError.internalServer(`No cardholder found for staff[${staffId}]`)
@@ -24,7 +24,7 @@ export default class ACSService {
         if (cardholders.results.length > 1) {
             throw AppError.internalServer(`Found more than one cardholder for staff[${staffId}]`)
         }
-        
+
         const cardholder = cardholders.results[0]
         if (cardInfo) {
             const newCardRes = await this.addCard2Cardholder(cardholder.id, cardInfo.getCard())

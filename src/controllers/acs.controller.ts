@@ -30,7 +30,7 @@ export class ACSController extends Controller {
 	 * @param reqB LinkStaffCardholderRequest
 	 * @returns LinkStaffCardholderResponse
 	 */
-	@Post('/cardholders/link')
+	@Post('/cardholders/linkbystaffid')
 	public async searchCardholder(@Body() reqB: LinkStaffCardholderRequest): Promise<IResponse> {
 		let cardInfo: CardEntity | undefined = undefined
 		if (reqB.card2Add) {
