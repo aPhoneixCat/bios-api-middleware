@@ -24,6 +24,13 @@ export interface CreateCardholderResponse {
     }
 }
 
+export interface LinkStaffCardholderRequest {
+    staffId: string,
+    card2Add?: AddCardToCardholderRequest
+}
+
+export interface LinkStaffCardholderResponse extends CreateCardholderResponse {}
+
 // Refresh cards of cardholder
 export interface RefreshCardholderCardRequest {
     existingCardId: string,

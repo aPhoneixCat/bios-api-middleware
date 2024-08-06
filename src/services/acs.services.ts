@@ -1,6 +1,6 @@
 import { envs } from "../config/env";
-import { AddNewCardResponse, CreateCardholderResponse, GetCardholderResponse, RefreshCardholderCardRequest, RefreshCardholderCardResponse, UpdateCardholderResponse } from "../domain/dtos/acs";
-import { Card, Competency, CompetencyOperation, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
+import { AddNewCardResponse, CreateCardholderResponse, GetCardholderResponse, LinkStaffCardholderResponse, RefreshCardholderCardResponse } from "../domain/dtos/acs";
+import { Card, CompetencyOperation, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../domain/dtos/gallagher/cardholder";
 import { CardEntity, CardholderEntity, UserType } from "../domain/entities/cardholder";
 import { AppError } from "../errors/custom.error";
 import CardholderAPI from "../lib/gallagher-api/cardholders.api";
@@ -10,6 +10,36 @@ import { provideSingleton } from "../utils/provideSingleton";
 @provideSingleton(ACSService)
 export default class ACSService {
   
+    /**
+     * link cardholder by staff id
+     * 
+     * @returns 
+     */
+    public async linkCardholderByStaffId(staffId: string, cardInfo: CardEntity | undefined): Promise<LinkStaffCardholderResponse> {
+        const cardholders =  await CardholderAPI.searchCardholderByStaffId(staffId)
+        if (!cardholders?.results) {
+            throw AppError.internalServer(`No cardholder found for staff[${staffId}]`)
+        }
+
+        if (cardholders.results.length > 1) {
+            throw AppError.internalServer(`Found more than one cardholder for staff[${staffId}]`)
+        }
+
+        const cardholder = cardholders.results[0]
+        if (cardInfo) {
+            const newCardRes = await this.addCard2Cardholder(cardholder.id, cardInfo.getCard())
+            return {
+                cardholderId: cardholder.id,
+                card: {
+                    cardId: newCardRes.newCardId,
+                    expiredAt: cardInfo.expiredAtInMs()
+                }
+            }
+        }
+
+        return { cardholderId: cardholder.id }
+    }
+
     /**
      * Get cardholder 
      * 

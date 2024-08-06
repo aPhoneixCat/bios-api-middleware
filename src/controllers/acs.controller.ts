@@ -2,6 +2,7 @@ import { Get, Post, Body, Path, Route, Tags, Delete, Controller, Patch, Query, P
 import {
 	AddCardToCardholderRequest,
 	CreateCardholderRequest,
+	LinkStaffCardholderRequest,
 	RefreshCardholderCardRequest
 } from '../domain/dtos/acs';
 import ACSService from '../services/acs.services';
@@ -21,6 +22,26 @@ export class ACSController extends Controller {
 	// Dependency Injection
 	constructor(@inject(ACSService) private acsService: ACSService) {
 		super();
+	}
+
+	/**
+	 * Link staffId to existing cardholder
+	 * 
+	 * @param reqB LinkStaffCardholderRequest
+	 * @returns LinkStaffCardholderResponse
+	 */
+	@Post('/cardholders/linkbystaffid')
+	public async searchCardholder(@Body() reqB: LinkStaffCardholderRequest): Promise<IResponse> {
+		let cardInfo: CardEntity | undefined = undefined
+		if (reqB.card2Add) {
+			cardInfo = new CardEntity(
+				reqB.card2Add.cardNumber, 
+				reqB.card2Add.fromInMs, 
+				reqB.card2Add.validityPeriodInMs);
+		}
+
+		const staffCardholder = await this.acsService.getCardholderByStaffId(reqB.staffId, cardInfo);
+		return SuccessResponse('successfully link cardholder', staffCardholder);
 	}
 
 	/**
