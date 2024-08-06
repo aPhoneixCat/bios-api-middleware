@@ -40,7 +40,7 @@ export class ACSController extends Controller {
 				reqB.card2Add.validityPeriodInMs);
 		}
 
-		const staffCardholder = await this.acsService.getCardholderByStaffId(reqB.staffId, cardInfo);
+		const staffCardholder = await this.acsService.linkCardholderByStaffId(reqB.staffId, cardInfo);
 		return SuccessResponse('successfully link cardholder', staffCardholder);
 	}
 
