@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosHeaders } from "axios"
 import { HttpCode } from "../../constants"
 import { IAPIEndpoint, EndpointConfig } from "../api-endpoint"
 import Logger from "../logger"
-import { GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
+import { GallagherCardholderSearchResponse, GallagherCreateCardholderRequest, GallagherCreateCardholderResponse, GallagherGetCardholderDetailResponse, GallagherUpdateCardholderRequest } from "../../domain/dtos/gallagher/cardholder"
 import { AppError } from "../../errors/custom.error"
 import { getAPIKey } from "./utils"
 import { envs } from "../../config/env"
@@ -18,6 +18,32 @@ export class Cardhodlers extends IAPIEndpoint {
             endpoint: '/api/cardholders',
             timeoutInMs: 5000,
             fields: ['defaults']
+        }
+    }
+
+    /**
+     * search cardholders
+     * 
+     * @returns 
+     */
+    async searchCardholderByStaffId(staffId: string): Promise<GallagherCardholderSearchResponse> {
+        const url = this.endpointConfig.endpoint
+        try {
+            const { data } = await this.axiosClient.get<GallagherCardholderSearchResponse>(url, {
+                headers: {
+                    'Authorization': getAPIKey()
+                },
+                params: {
+                    pdf_1066: `"${staffId}"` // double quote to enable exact search
+                }
+            })
+
+            return data
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                throw AppError.internalServer(this.buildErrorMessage(error))
+            }
+            throw AppError.internalServerWrap(error)
         }
     }
 

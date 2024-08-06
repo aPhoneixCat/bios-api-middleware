@@ -72,9 +72,9 @@ export class CardEntity {
     private readonly until: moment.Moment
 
     constructor(cardNumber?: string, fromInMs?: number, validityPeriodInMs?: number) {
-        this.cardNumber = cardNumber || ''
-        this.validityPeriodInMs = validityPeriodInMs ? validityPeriodInMs : 5 * 60 * 1000;
-        this.fromInMs = fromInMs ? fromInMs : moment.now().valueOf()
+        this.cardNumber = cardNumber ?? ''
+        this.validityPeriodInMs = validityPeriodInMs ?? 5 * 60 * 1000;
+        this.fromInMs = fromInMs ?? moment.now().valueOf()
         this.from = moment(this.fromInMs)
         this.untilInMs = moment(this.fromInMs).add(this.validityPeriodInMs, 'ms').valueOf()
         this.until = moment(this.untilInMs)
