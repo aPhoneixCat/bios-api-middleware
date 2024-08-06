@@ -34,7 +34,7 @@ export class Cardhodlers extends IAPIEndpoint {
                     'Authorization': getAPIKey()
                 },
                 params: {
-                    pdf_1066: `"${staffId}"` // double quote to enable exact search
+                    pdf_1006: `"${staffId}"` // double quote to enable exact search
                 }
             })
 
