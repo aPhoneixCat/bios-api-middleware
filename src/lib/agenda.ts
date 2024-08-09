@@ -4,7 +4,7 @@ import { AgendaJob } from '../jobs/agenda-job';
 import Logger from './logger';
 import cardholderEventJob from '../jobs/cardholder-event';
 
-const connectionString = `${envs.MONGODB_CONNECTION_STR}/${envs.MONGODB_DATABASE}`;
+const connectionString = `${envs.MONGODB_CONNECTION_STR}`;
 const connectionOpts = { db: { address: connectionString, collection: 'agendaJobs' } };
 
 const agenda = new Agenda(connectionOpts);
