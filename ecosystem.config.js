@@ -19,7 +19,7 @@ module.exports = {
                 RUCKUS_USERNAME:'xxx',
                 RUCKUS_PASSWORD:'xxx',
                 MONGODB_CONNECTION_STR: 'mongodb://bios:NQndoWo4mQ@192.168.131.161:27017/bios',
-                MONGODB_CONNECTION_STR_DR: 'mongodb://bios:NQndoWo4mQ@192.168.41.65:27017/bios',
+                MONGODB_CONNECTION_STR_DR: 'mongodb://bios:NQndoWo4mQ@192.168.131.161:27017/bios',
                 MONGODB_DATABASE: 'bios',
                 SMTP_SERVER_HOST: 'smtp.office365.com',
                 SMTP_SERVER_PORT: 587,
